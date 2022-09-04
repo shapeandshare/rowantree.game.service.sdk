@@ -89,8 +89,8 @@ class RowanTreeService:
     def user_active_get(self, user_guid: str) -> UserActive:
         return self.user_active_get_command.execute(user_guid=user_guid)
 
-    def user_active_set(self, user_guid: str, active: bool) -> User:
-        request: User = User(active=active)
+    def user_active_set(self, user_guid: str, active: bool) -> UserActive:
+        request: UserActive = UserActive(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self) -> User:
