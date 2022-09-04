@@ -7,5 +7,7 @@ from .abstract_command import AbstractCommand
 
 class WorldStatusGetCommand(AbstractCommand):
     def execute(self) -> WorldStatus:
-        response: Response = requests.get(url=f"{self.config.endpoint}/v1/world", headers=self.headers)
+        response: Response = requests.get(
+            url=f"{self.config.endpoint}/v1/world", headers=self.headers, timeout=self.config.timeout
+        )
         return WorldStatus.parse_obj(response.json())

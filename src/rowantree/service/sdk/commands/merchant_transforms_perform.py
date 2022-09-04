@@ -10,4 +10,5 @@ class MerchantTransformPerformCommand(AbstractCommand):
             url=f"{self.config.endpoint}/v1/user/{user_guid}/merchant",
             data=request.json(by_alias=True),
             headers=self.headers,
+            timeout=self.config.timeout,
         )

@@ -7,6 +7,7 @@ from ..common.config import Config
 class AbstractCommand(ABC):
     config: Config
     headers: dict[str, str]
+    timeout: float = 30
 
     def __init__(self, config: Config):
         self.config = config

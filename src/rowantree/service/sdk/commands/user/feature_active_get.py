@@ -11,5 +11,6 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             url=f"{self.config.endpoint}/v1/user/{user_guid}/features/active",
             params={"details": details},
             headers=self.headers,
+            timeout=self.config.timeout,
         )
         return UserFeature.parse_obj(response.json())

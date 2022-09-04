@@ -10,4 +10,5 @@ class UserIncomeSetCommand(AbstractCommand):
             url=f"{self.config.endpoint}/v1/user/{user_guid}/income",
             data=request.json(by_alias=True),
             headers=self.headers,
+            timeout=self.config.timeout,
         )

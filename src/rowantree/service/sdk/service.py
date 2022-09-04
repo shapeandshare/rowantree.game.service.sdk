@@ -4,7 +4,6 @@ from rowantree.contracts import (
     UserActive,
     UserFeature,
     UserFeatures,
-    UserIncome,
     UserIncomes,
     UserMerchants,
     UserPopulation,
@@ -37,6 +36,7 @@ from .contracts.requests.user.income_set import UserIncomeSetRequest
 from .contracts.requests.user.transport import UserTransportRequest
 
 
+# pylint: disable=too-many-instance-attributes
 class RowanTreeService:
     config: Config
 
