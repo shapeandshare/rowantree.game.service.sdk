@@ -1,12 +1,17 @@
-from rowantree.contracts import ActionQueue, UserFeature, UserIncome, WorldStatus
-from rowantree.contracts.dto.user.active import UserActive
-from rowantree.contracts.dto.user.features import UserFeatures
-from rowantree.contracts.dto.user.incomes import UserIncomes
-from rowantree.contracts.dto.user.merchants import UserMerchants
-from rowantree.contracts.dto.user.population import UserPopulation
-from rowantree.contracts.dto.user.state import UserState
-from rowantree.contracts.dto.user.stores import UserStores
-from rowantree.contracts.dto.user.user import User
+from rowantree.contracts import (
+    ActionQueue,
+    User,
+    UserActive,
+    UserFeature,
+    UserFeatures,
+    UserIncome,
+    UserIncomes,
+    UserMerchants,
+    UserPopulation,
+    UserState,
+    UserStores,
+    WorldStatus,
+)
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand

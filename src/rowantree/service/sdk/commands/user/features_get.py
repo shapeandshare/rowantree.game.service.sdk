@@ -1,6 +1,6 @@
 import requests
 from requests import Response
-from rowantree.contracts.dto.user.features import UserFeatures
+from rowantree.contracts import UserFeatures
 
 from ..abstract_command import AbstractCommand
 

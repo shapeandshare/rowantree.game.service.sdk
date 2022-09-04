@@ -1,6 +1,6 @@
 import requests
 from requests import Response
-from rowantree.contracts.dto.user.active import UserActive
+from rowantree.contracts import UserActive
 
 from ..abstract_command import AbstractCommand
 
