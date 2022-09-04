@@ -1,8 +1,8 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user.income_get import UserIncomeGetResponse
-from .abstract_command import AbstractCommand
+from ...contracts.responses.user.income_get import UserIncomeGetResponse
+from ..abstract_command import AbstractCommand
 
 
 class UserIncomeGetCommand(AbstractCommand):

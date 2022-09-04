@@ -3,7 +3,7 @@ from requests import Response
 
 from rowantree.contracts.dto.user.state import UserState
 
-from .abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand
 
 
 class UserStateGetCommand(AbstractCommand):

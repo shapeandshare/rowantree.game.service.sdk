@@ -1,8 +1,8 @@
 import requests
 from requests import Response
 
-from ..contracts.requests.user.active_set import UserActiveSetRequest
-from .abstract_command import AbstractCommand
+from ...contracts.requests.user.active_set import UserActiveSetRequest
+from ..abstract_command import AbstractCommand
 
 
 class UserActiveSetCommand(AbstractCommand):

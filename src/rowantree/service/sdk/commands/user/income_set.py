@@ -1,7 +1,7 @@
 import requests
 
-from ..contracts.requests.user.income_set import UserIncomeSetRequest
-from .abstract_command import AbstractCommand
+from ...contracts.requests.user.income_set import UserIncomeSetRequest
+from ..abstract_command import AbstractCommand
 
 
 class UserIncomeSetCommand(AbstractCommand):

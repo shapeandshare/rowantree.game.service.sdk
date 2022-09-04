@@ -1,8 +1,8 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user.population_get import UserPopulationGetResponse
-from .abstract_command import AbstractCommand
+from ...contracts.responses.user.population_get import UserPopulationGetResponse
+from ..abstract_command import AbstractCommand
 
 
 class UserPopulationGetCommand(AbstractCommand):

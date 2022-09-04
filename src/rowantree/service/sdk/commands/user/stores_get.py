@@ -1,8 +1,8 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user.stores_get import UserStoresGetResponse
-from .abstract_command import AbstractCommand
+from ...contracts.responses.user.stores_get import UserStoresGetResponse
+from ..abstract_command import AbstractCommand
 
 
 class UserStoresGetCommand(AbstractCommand):

@@ -3,8 +3,8 @@ from requests import Response
 
 from rowantree.contracts import UserFeature
 
-from ..contracts.requests.user.transport import UserTransportRequest
-from .abstract_command import AbstractCommand
+from ...contracts.requests.user.transport import UserTransportRequest
+from ..abstract_command import AbstractCommand
 
 
 class UserTransportCommand(AbstractCommand):

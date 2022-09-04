@@ -1,8 +1,8 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user.features_get import UserFeaturesGetResponse
-from .abstract_command import AbstractCommand
+from ...contracts.responses.user.features_get import UserFeaturesGetResponse
+from ..abstract_command import AbstractCommand
 
 
 class UserFeaturesGetCommand(AbstractCommand):

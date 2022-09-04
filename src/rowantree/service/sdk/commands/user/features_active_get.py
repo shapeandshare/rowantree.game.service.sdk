@@ -3,7 +3,7 @@ from requests import Response
 
 from rowantree.contracts import UserFeature
 
-from .abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand
 
 
 class UserFeaturesActiveGetCommand(AbstractCommand):
