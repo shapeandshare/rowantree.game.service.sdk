@@ -1,7 +1,7 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user_merchant_transforms_get_response import UserMerchantTransformsGetResponse
+from ..contracts.responses.user_merchant_transforms_get import UserMerchantTransformsGetResponse
 from .abstract_command import AbstractCommand
 
 

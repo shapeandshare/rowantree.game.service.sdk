@@ -1,6 +1,6 @@
 import requests
 
-from ..contracts.requests.merchant_transform_request import MerchantTransformRequest
+from ..contracts.requests.merchant_transform import MerchantTransformRequest
 from .abstract_command import AbstractCommand
 
 

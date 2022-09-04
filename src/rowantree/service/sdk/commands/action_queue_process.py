@@ -1,6 +1,6 @@
 import requests
 
-from ..contracts.requests.action_queue_process_request import ActionQueueProcessRequest
+from ..contracts.requests.action_queue_process import ActionQueueProcessRequest
 from .abstract_command import AbstractCommand
 
 
