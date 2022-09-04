@@ -1,7 +1,7 @@
 import requests
 from requests import Response
 
-from ..contracts.responses.user_population_get import UserPopulationGetResponse
+from ..contracts.responses.user.population_get import UserPopulationGetResponse
 from .abstract_command import AbstractCommand
 
 
