@@ -9,7 +9,7 @@ class Config(BaseModel):
     config_file_path: Optional[str] = "rowantree.config"
     access_key: Optional[str]
     endpoint: Optional[str]
-    timeout: Optional[str]
+    timeout: Optional[float]
 
     def __init__(self, **data: Any):
         super().__init__(**data)
@@ -19,7 +19,7 @@ class Config(BaseModel):
         # Server Options
         self.access_key = config.get("SERVER", "access_key")
         self.endpoint = config.get("SERVER", "endpoint")
-        self.timeout = config.get("SERVER", "timeout")
+        self.timeout = config.getfloat("SERVER", "timeout")
 
         if "ACCESS_KEY" in os.environ:
             self.access_key = os.environ["ACCESS_KEY"]
@@ -28,4 +28,4 @@ class Config(BaseModel):
             self.endpoint = os.environ["ROWANTREE_SERVICE_ENDPOINT"]
 
         if "ROWANTREE_SERVICE_TIMEOUT" in os.environ:
-            self.timeout = os.environ["ROWANTREE_SERVICE_TIMEOUT"]
+            self.timeout = float(os.environ["ROWANTREE_SERVICE_TIMEOUT"])
