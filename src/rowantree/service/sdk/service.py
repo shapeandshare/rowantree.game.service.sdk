@@ -30,7 +30,6 @@ from .commands.user.stores_get import UserStoresGetCommand
 from .commands.user.transport import UserTransportCommand
 from .commands.world_get import WorldStatusGetCommand
 from .common.config import Config
-from .contracts.requests.action_queue_process import ActionQueueProcessRequest
 from .contracts.requests.merchant_transform import MerchantTransformRequest
 from .contracts.requests.user.income_set import UserIncomeSetRequest
 from .contracts.requests.user.transport import UserTransportRequest
@@ -145,8 +144,7 @@ class RowanTreeService:
         return self.health_get_command.execute()
 
     def action_queue_process(self, queue: ActionQueue) -> None:
-        request: ActionQueueProcessRequest = ActionQueueProcessRequest(queue=queue)
-        self.action_queue_process_command.execute(request=request)
+        self.action_queue_process_command.execute(request=queue)
 
     def world_status_get(self) -> WorldStatus:
         return self.world_status_get_command.execute()

@@ -7,7 +7,7 @@ from ..abstract_command import AbstractCommand
 
 class UserPopulationGetCommand(AbstractCommand):
     def execute(self, user_guid: str) -> UserPopulation:
-        response: Response = requests.post(
+        response: Response = requests.get(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/population",
             headers=self.headers,
             timeout=self.config.timeout,
