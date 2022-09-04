@@ -1,18 +1,19 @@
 import configparser
 import os
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
 
 class Config(BaseModel):
+    config_file_path: Optional[str] = "rowantree.config"
     access_key: Optional[str]
     endpoint: Optional[str]
 
-    def __init__(self, config_file_path: str = "rowantree.config", *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **data: Any):
+        super().__init__(**data)
         config = configparser.ConfigParser()
-        config.read(config_file_path)
+        config.read(self.config_file_path)
 
         # Server Options
         self.access_key = config.get("SERVER", "access_key")

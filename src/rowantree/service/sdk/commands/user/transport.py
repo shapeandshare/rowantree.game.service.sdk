@@ -1,6 +1,5 @@
 import requests
 from requests import Response
-
 from rowantree.contracts import UserFeature
 
 from ...contracts.requests.user.transport import UserTransportRequest
