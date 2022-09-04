@@ -1,15 +1,15 @@
 import requests
 from requests import Response
+from rowantree.contracts.dto.user.user import User
 
-from ...contracts.requests.user.active_set import UserActiveSetRequest
 from ..abstract_command import AbstractCommand
 
 
 class UserActiveSetCommand(AbstractCommand):
-    def execute(self, user_guid: str, request: UserActiveSetRequest) -> UserActiveSetRequest:
+    def execute(self, user_guid: str, request: User) -> User:
         response: Response = requests.post(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/active",
-            data=request.json(by_alias=True),
+            data=request.json(by_alias=True, exclude={"state"}),
             headers=self.headers,
         )
-        return UserActiveSetRequest.parse_obj(response.json())
+        return User.parse_obj(response.json())
