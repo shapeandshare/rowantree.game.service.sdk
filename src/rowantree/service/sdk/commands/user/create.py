@@ -15,7 +15,7 @@ class UserCreateCommand(AbstractCommand):
 
     Methods
     -------
-    def execute(self) -> User
+    execute(self) -> User
         Executes the command.
     """
 

@@ -1,3 +1,5 @@
+""" Abstract Command Definition """
+
 from abc import abstractmethod
 from typing import Any, Optional
 
@@ -7,6 +9,19 @@ from ..common.config import Config
 
 
 class AbstractCommand(BaseModel):
+    """
+    Abstract Command
+
+    Attributes
+    ----------
+    config: Config
+        The configuration for the command.
+    headers: dict[str, str] = {}
+        Headers needed for the requests.
+    timeout: float = 30
+        The default timeout of requests.
+    """
+
     config: Config
     headers: dict[str, str] = {}
     timeout: float = 30

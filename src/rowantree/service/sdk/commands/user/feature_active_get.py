@@ -15,7 +15,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
 
     Methods
     -------
-    def execute(self, user_guid: str, details: bool) -> UserFeature
+    execute(self, user_guid: str, details: bool) -> UserFeature
         Executes the command.
     """
 

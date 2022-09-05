@@ -14,7 +14,7 @@ class UserActiveGetCommand(AbstractCommand):
 
     Methods
     -------
-    def execute(self, user_guid: str) -> UserActive
+    execute(self, user_guid: str) -> UserActive
         Executes the command.
     """
 

@@ -12,7 +12,7 @@ class UserDeleteCommand(AbstractCommand):
 
     Methods
     -------
-    def execute(self, user_guid: str) -> None
+    execute(self, user_guid: str) -> None
         Executes the command.
     """
 
