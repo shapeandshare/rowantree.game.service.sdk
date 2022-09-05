@@ -1,3 +1,8 @@
+"""
+The Rowan Tree Service Layer Interface
+This should be used as the primary entry point for interactions.
+"""
+
 from rowantree.contracts import (
     ActionQueue,
     User,
@@ -37,6 +42,11 @@ from .contracts.requests.user.transport import UserTransportRequest
 
 # pylint: disable=too-many-instance-attributes
 class RowanTreeService:
+    """
+    Rowan Tree Service
+    Provides an interface for access the service layer.
+    """
+
     config: Config
 
     user_active_get_command: UserActiveGetCommand
@@ -91,60 +101,275 @@ class RowanTreeService:
     # User Commands
 
     def user_active_get(self, user_guid: str) -> UserActive:
+        """
+        Gets User Active State
+
+        Parameters
+        ----------
+        user_guid: str
+            The user guid to look up.
+
+        Returns
+        -------
+        user_active: UserActive
+            The user active state object.
+        """
+
         return self.user_active_get_command.execute(user_guid=user_guid)
 
     def user_active_set(self, user_guid: str, active: bool) -> UserActive:
+        """
+        Sets the user active state.
+
+        Parameters
+        ----------
+        user_guid: str
+            The user guid to target.
+        active: bool
+            The active state to set the user to.
+
+        Returns
+        -------
+        user_active: UserActive
+            The state of the user.
+        """
+
         request: UserActive = UserActive(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self) -> User:
+        """
+        Creates a user.
+
+        Returns
+        -------
+        user: User
+            The newly created user.
+        """
+
         return self.user_create_command.execute()
 
     def user_delete(self, user_guid: str) -> None:
+        """
+        Deletes a user.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        """
+
         self.user_delete_command.execute(user_guid=user_guid)
 
     def user_feature_active_get(self, user_guid: str, details: bool) -> UserFeature:
+        """
+        Gets the active user feature.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        details: bool
+            Whether to include details of the feature.
+
+        Returns
+        -------
+        user_feature: UserFeature
+            The active UserFeature.
+        """
+
         return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
 
     def user_features_get(self, user_guid: str) -> UserFeatures:
+        """
+        Gets a (unique) list of user features.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+
+        Returns
+        -------
+        user_features: UserFeatures
+            A unique list of user features.
+        """
+
         return self.user_features_get_command.execute(user_guid=user_guid)
 
     def user_income_get(self, user_guid: str) -> UserIncomes:
+        """
+        Gets (unique) list of user incomes.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+
+        Returns
+        -------
+        user_incomes: UserIncomes
+            A (unique) list of user incomes.
+        """
+
         return self.user_income_get_command.execute(user_guid=user_guid)
 
     def user_income_set(self, user_guid: str, income_source_name: str, amount: int) -> None:
+        """
+        Sets a user income. (Creates or dismisses a number of workers of the type).
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        income_source_name: str
+            The name of the income type.
+        amount: int
+            The amount to set the income type to (absolute).
+        """
+
         request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
         self.user_income_set_command.execute(user_guid=user_guid, request=request)
 
     def user_merchant_transforms_get(self, user_guid: str) -> UserMerchants:
+        """
+        Gets a (unique) list of user merchant transforms.
+
+        Parameters
+        ----------
+        user_guid: str
+            Target user guid.
+
+        Returns
+        -------
+        user_merchants: UserMerchants
+            A (unique) list of user merchant transforms.
+        """
+
         return self.user_merchant_transforms_get_command.execute(user_guid=user_guid)
 
     def user_population_get(self, user_guid: str) -> UserPopulation:
+        """
+        Gets the user population.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+
+        Returns
+        -------
+        user_population: UserPopulation
+            User population object.
+        """
+
         return self.user_population_get_command.execute(user_guid=user_guid)
 
     def user_state_get(self, user_guid: str) -> UserState:
+        """
+        Gets the user game state.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+
+        Returns
+        -------
+        user_state: UserState
+            The user state object.
+        """
+
         return self.user_state_get_command.execute(user_guid=user_guid)
 
     def user_stores_get(self, user_guid: str) -> UserStores:
+        """
+        Gets the (unique) list of user stores.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+
+        Returns
+        -------
+        user_stores: UserStores
+            A (unique) list of user stores.
+        """
+
         return self.user_stores_get_command.execute(user_guid=user_guid)
 
     def user_transport(self, user_guid: str, location: str) -> UserFeature:
+        """
+        Performs a user transport. (feature to feature change)
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        location: str
+            The feature/location to transport the user to.
+
+        Returns
+        -------
+        user_feature: UserFeature
+            The user's new active feature.
+        """
+
         request: UserTransportRequest = UserTransportRequest(location=location)
         return self.user_transport_command.execute(user_guid=user_guid, request=request)
 
     # Merchant Commands
 
     def merchant_transform_perform(self, user_guid: str, store_name: str) -> None:
+        """
+        Performs a merchant transform.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        store_name: str
+            The store name to perform the merchant transform on.
+        """
+
         request: MerchantTransformRequest = MerchantTransformRequest(store_name=store_name)
         self.merchant_transform_perform_command.execute(user_guid=user_guid, request=request)
 
     # Admin Commands
 
     def health_get(self) -> bool:
+        """
+        Gets the server health.
+
+        Returns
+        -------
+        health: bool
+            The server health (true or false).
+        """
+
         return self.health_get_command.execute()
 
     def action_queue_process(self, queue: ActionQueue) -> None:
+        """
+        Processes an action queue.
+
+        Parameters
+        ----------
+        queue: ActionQueue
+            The action queue to process.
+        """
+
         self.action_queue_process_command.execute(request=queue)
 
     def world_status_get(self) -> WorldStatus:
+        """
+        Gets the world status.
+
+        Returns
+        -------
+        world_status: WorldStatus
+            The world status.
+        """
+
         return self.world_status_get_command.execute()

@@ -1,3 +1,5 @@
+""" SDK Config Definition """
+
 import configparser
 import os
 from typing import Any, Optional
@@ -6,6 +8,22 @@ from pydantic import BaseModel
 
 
 class Config(BaseModel):
+    """
+    SDK Config
+    Defines the high level environmental configurations/settings for the SDK.
+
+    Attributes
+    ----------
+    config_file_path: Optional[str] = "rowantree.config"
+        The config file to load.
+    access_key: Optional[str]
+        The service layer access key
+    endpoint: Optional[str]
+        The service layer endpoint - http(s)://(host):(port)
+    timeout: Optional[float]
+        The timeout for requests to the service layer.
+    """
+
     config_file_path: Optional[str] = "rowantree.config"
     access_key: Optional[str]
     endpoint: Optional[str]
