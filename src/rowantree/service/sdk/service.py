@@ -1,3 +1,8 @@
+"""
+The Rowan Tree Service Layer Interface
+This should be used as the primary entry point for interactions.
+"""
+
 from rowantree.contracts import (
     ActionQueue,
     User,
@@ -37,6 +42,11 @@ from .contracts.requests.user.transport import UserTransportRequest
 
 # pylint: disable=too-many-instance-attributes
 class RowanTreeService:
+    """
+    Rowan Tree Service
+    Provides an interface for access the service layer.
+    """
+
     config: Config
 
     user_active_get_command: UserActiveGetCommand
@@ -91,19 +101,83 @@ class RowanTreeService:
     # User Commands
 
     def user_active_get(self, user_guid: str) -> UserActive:
+        """
+        Gets User Active State
+
+        Parameters
+        ----------
+        user_guid: str
+            The user guid to look up.
+
+        Returns
+        -------
+        user_active: UserActive
+            The user active state object.
+        """
+
         return self.user_active_get_command.execute(user_guid=user_guid)
 
     def user_active_set(self, user_guid: str, active: bool) -> UserActive:
+        """
+        Sets the user active state.
+
+        Parameters
+        ----------
+        user_guid: str
+            The user guid to target.
+        active: bool
+            The active state to set the user to.
+
+        Returns
+        -------
+        user_active: UserActive
+            The state of the user.
+        """
+
         request: UserActive = UserActive(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self) -> User:
+        """
+        Creates a user.
+
+        Returns
+        -------
+        user: User
+            The newly created user.
+        """
+
         return self.user_create_command.execute()
 
     def user_delete(self, user_guid: str) -> None:
+        """
+        Deletes a user.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        """
+
         self.user_delete_command.execute(user_guid=user_guid)
 
     def user_feature_active_get(self, user_guid: str, details: bool) -> UserFeature:
+        """
+        Gets the active user feature.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
+        details: bool
+            Whether to include details of the feature.
+
+        Returns
+        -------
+        user_feature: UserFeature
+            The active UserFeature.
+        """
+
         return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
 
     def user_features_get(self, user_guid: str) -> UserFeatures:
