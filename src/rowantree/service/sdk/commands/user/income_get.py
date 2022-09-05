@@ -11,7 +11,7 @@ from ..abstract_command import AbstractCommand
 class UserIncomeGetCommand(AbstractCommand):
     """
     User Income Get Command
-    Gets user incomes.
+    Gets (unique) list of user incomes.
 
     Methods
     -------
@@ -31,7 +31,7 @@ class UserIncomeGetCommand(AbstractCommand):
         Returns
         -------
         user_incomes: UserIncomes
-            A unique list of user incomes.
+            A (unique) list of user incomes.
         """
 
         response: Response = requests.get(
