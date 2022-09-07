@@ -25,7 +25,9 @@ class Config(BaseModel):
     """
 
     config_file_path: Optional[str] = "rowantree.config"
-    access_key: Optional[str]
+    username: Optional[str]
+    password: Optional[str]
+    auth_endpoint: Optional[str]
     endpoint: Optional[str]
     timeout: Optional[float]
 
@@ -35,12 +37,20 @@ class Config(BaseModel):
         config.read(self.config_file_path)
 
         # Server Options
-        self.access_key = config.get("SERVER", "access_key")
+        self.username = config.get("SERVER", "username")
+        self.password = config.get("SERVER", "password")
+        self.auth_endpoint = config.get("SERVER", "auth_endpoint")
         self.endpoint = config.get("SERVER", "endpoint")
         self.timeout = config.getfloat("SERVER", "timeout")
 
-        if "ACCESS_KEY" in os.environ:
-            self.access_key = os.environ["ACCESS_KEY"]
+        if "ACCESS_USERNAME" in os.environ:
+            self.username = os.environ["ACCESS_USERNAME"]
+
+        if "ACCESS_PASSWORD" in os.environ:
+            self.password = os.environ["ACCESS_PASSWORD"]
+
+        if "ACCESS_AUTH_ENDPOINT" in os.environ:
+            self.auth_endpoint = os.environ["ACCESS_AUTH_ENDPOINT"]
 
         if "ROWANTREE_SERVICE_ENDPOINT" in os.environ:
             self.endpoint = os.environ["ROWANTREE_SERVICE_ENDPOINT"]

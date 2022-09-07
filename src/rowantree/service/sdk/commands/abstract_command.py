@@ -5,6 +5,11 @@ from typing import Any, Optional
 
 from pydantic import BaseModel
 
+from rowantree.auth.sdk.commands.authenticate_user import AuthenticateUserCommand
+from rowantree.auth.sdk.config.auth import AuthConfig
+from rowantree.auth.sdk.contracts.dto.authenticate_user_request import AuthenticateUserRequest
+from rowantree.auth.sdk.contracts.dto.token import Token
+
 from ..common.config import Config
 
 
@@ -26,11 +31,20 @@ class AbstractCommand(BaseModel):
     headers: dict[str, str] = {}
     timeout: float = 30
 
+    authenticate_user_command: AuthenticateUserCommand
+
     def __init__(self, **data: Any):
         super().__init__(**data)
-        if "API-ACCESS-KEY" not in self.headers:
-            self.headers["API-ACCESS-KEY"] = self.config.access_key
+        self.authenticate_user_command = AuthenticateUserCommand(config=AuthConfig())
+        self.authenticate()
 
     @abstractmethod
     def execute(self, *args, **kwargs) -> Optional[Any]:
         """Command entry point"""
+
+    def authenticate(self) -> None:
+        request: AuthenticateUserRequest = AuthenticateUserRequest(
+            username=self.config.username, password=self.config.password
+        )
+        auth_token: Token = self.authenticate_user_command.execute(request=request)
+        self.headers["Authorization"] = f"Bearer {auth_token.access_token}"
