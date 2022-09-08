@@ -19,7 +19,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, details: bool) -> UserFeature:
+    def execute(self, user_guid: str, details: bool, headers: dict[str, str]) -> UserFeature:
         """
         Executes the command.
 
@@ -39,7 +39,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         response: Response = requests.get(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/features/active",
             params={"details": details},
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserFeature.parse_obj(response.json())

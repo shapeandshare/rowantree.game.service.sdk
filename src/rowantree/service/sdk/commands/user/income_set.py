@@ -16,7 +16,7 @@ class UserIncomeSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserIncomeSetRequest) -> None:
+    def execute(self, user_guid: str, request: UserIncomeSetRequest, headers: dict[str, str]) -> None:
         """
         Executes the command.
 
@@ -31,6 +31,6 @@ class UserIncomeSetCommand(AbstractCommand):
         requests.post(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/income",
             data=request.json(by_alias=True),
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )

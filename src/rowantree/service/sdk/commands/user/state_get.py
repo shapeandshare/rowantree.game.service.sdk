@@ -19,7 +19,7 @@ class UserStateGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserState:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserState:
         """
         Executes the command.
 
@@ -35,6 +35,6 @@ class UserStateGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/state", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/user/{user_guid}/state", headers=headers, timeout=self.config.timeout
         )
         return UserState.parse_obj(response.json())

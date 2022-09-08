@@ -18,7 +18,7 @@ class ActionQueueProcessCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, request: ActionQueue) -> None:
+    def execute(self, request: ActionQueue, headers: dict[str, str]) -> None:
         """
         Executes the command.
 
@@ -31,6 +31,6 @@ class ActionQueueProcessCommand(AbstractCommand):
         requests.post(
             url=f"{self.config.endpoint}/v1/world/queue",
             data=request.json(by_alias=True),
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )

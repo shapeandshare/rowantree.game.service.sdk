@@ -19,7 +19,7 @@ class UserStoresGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserStores:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserStores:
         """
         Gets the (unique) list of user stores.
 
@@ -35,6 +35,6 @@ class UserStoresGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/stores", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/user/{user_guid}/stores", headers=headers, timeout=self.config.timeout
         )
         return UserStores.parse_obj(response.json())

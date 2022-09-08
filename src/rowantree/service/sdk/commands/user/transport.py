@@ -20,7 +20,7 @@ class UserTransportCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserTransportRequest) -> UserFeature:
+    def execute(self, user_guid: str, request: UserTransportRequest, headers: dict[str, str]) -> UserFeature:
         """
         Executes the command.
 
@@ -40,7 +40,7 @@ class UserTransportCommand(AbstractCommand):
         response: Response = requests.post(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/transport",
             data=request.json(by_alias=True),
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserFeature.parse_obj(response.json())

@@ -19,7 +19,7 @@ class UserCreateCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self) -> User:
+    def execute(self, headers: dict[str, str]) -> User:
         """
         Executes the command.
 
@@ -30,6 +30,6 @@ class UserCreateCommand(AbstractCommand):
         """
 
         response: Response = requests.post(
-            url=f"{self.config.endpoint}/v1/user", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/user", headers=headers, timeout=self.config.timeout
         )
         return User.parse_obj(response.json())

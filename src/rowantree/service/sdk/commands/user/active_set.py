@@ -18,7 +18,7 @@ class UserActiveSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserActive) -> UserActive:
+    def execute(self, user_guid: str, request: UserActive, headers: dict[str, str]) -> UserActive:
         """
         Executes the command.
 
@@ -39,7 +39,7 @@ class UserActiveSetCommand(AbstractCommand):
             url=f"{self.config.endpoint}/v1/user/{user_guid}/active",
             # TODO: In the future when this is the user object we will need to white list (or black list properties).
             data=request.json(by_alias=True, exclude={"state"}),
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserActive.parse_obj(response.json())
