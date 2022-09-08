@@ -18,7 +18,7 @@ class UserActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserActive:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserActive:
         """
         Executes the command.
 
@@ -34,6 +34,6 @@ class UserActiveGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/active", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/user/{user_guid}/active", headers=headers, timeout=self.config.timeout
         )
         return UserActive.parse_obj(response.json())

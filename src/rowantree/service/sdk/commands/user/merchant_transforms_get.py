@@ -19,7 +19,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserMerchants:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserMerchants:
         """
         Executes the command.
 
@@ -36,7 +36,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
 
         response: Response = requests.get(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/merchant",
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserMerchants.parse_obj(response.json())

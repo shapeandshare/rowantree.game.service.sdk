@@ -45,4 +45,5 @@ logs/
 
 venv/
 .vs/
-
+dist/
+src/rowantree.service.sdk.egg-info/

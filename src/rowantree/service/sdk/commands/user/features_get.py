@@ -19,7 +19,7 @@ class UserFeaturesGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserFeatures:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserFeatures:
         """
         Executes the command.
 
@@ -36,7 +36,7 @@ class UserFeaturesGetCommand(AbstractCommand):
 
         response: Response = requests.get(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/features",
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserFeatures.parse_obj(response.json())

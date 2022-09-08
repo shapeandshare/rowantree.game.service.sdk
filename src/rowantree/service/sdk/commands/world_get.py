@@ -19,7 +19,7 @@ class WorldStatusGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self) -> WorldStatus:
+    def execute(self, headers: dict[str, str]) -> WorldStatus:
         """
         Executes the command.
 
@@ -30,6 +30,6 @@ class WorldStatusGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/world", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/world", headers=headers, timeout=self.config.timeout
         )
         return WorldStatus.parse_obj(response.json())

@@ -17,7 +17,7 @@ class MerchantTransformPerformCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: MerchantTransformRequest) -> None:
+    def execute(self, user_guid: str, request: MerchantTransformRequest, headers: dict[str, str]) -> None:
         """
         Executes the command.
 
@@ -32,6 +32,6 @@ class MerchantTransformPerformCommand(AbstractCommand):
         requests.post(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/merchant",
             data=request.json(by_alias=True),
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )

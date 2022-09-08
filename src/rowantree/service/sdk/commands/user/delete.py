@@ -16,7 +16,7 @@ class UserDeleteCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> None:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> None:
         """
         Executes the command.
 
@@ -26,6 +26,4 @@ class UserDeleteCommand(AbstractCommand):
             The target user guid.
         """
 
-        requests.delete(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}", headers=self.headers, timeout=self.config.timeout
-        )
+        requests.delete(url=f"{self.config.endpoint}/v1/user/{user_guid}", headers=headers, timeout=self.config.timeout)

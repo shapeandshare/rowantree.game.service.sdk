@@ -19,7 +19,7 @@ class UserPopulationGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserPopulation:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserPopulation:
         """
         Executes the command.
 
@@ -36,7 +36,7 @@ class UserPopulationGetCommand(AbstractCommand):
 
         response: Response = requests.get(
             url=f"{self.config.endpoint}/v1/user/{user_guid}/population",
-            headers=self.headers,
+            headers=headers,
             timeout=self.config.timeout,
         )
         return UserPopulation.parse_obj(response.json())

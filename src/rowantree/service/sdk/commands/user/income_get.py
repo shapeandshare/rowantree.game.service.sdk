@@ -19,7 +19,7 @@ class UserIncomeGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserIncomes:
+    def execute(self, user_guid: str, headers: dict[str, str]) -> UserIncomes:
         """
         Executes the command.
 
@@ -35,6 +35,6 @@ class UserIncomeGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/income", headers=self.headers, timeout=self.config.timeout
+            url=f"{self.config.endpoint}/v1/user/{user_guid}/income", headers=headers, timeout=self.config.timeout
         )
         return UserIncomes.parse_obj(response.json())
