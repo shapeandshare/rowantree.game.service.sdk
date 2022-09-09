@@ -1,11 +1,11 @@
 """ UserActiveGet Command Definition """
-import requests
-from requests import Response
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from starlette import status
+
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserActive
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserActiveGetCommand(AbstractCommand):
@@ -19,7 +19,7 @@ class UserActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserActive:
+    def execute(self, user_guid: str) -> UserActive:
         """
         Executes the command.
 
@@ -27,8 +27,6 @@ class UserActiveGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The user guid to look up.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------
@@ -36,9 +34,10 @@ class UserActiveGetCommand(AbstractCommand):
             The user active state object.
         """
 
-        response: Response = requests.get(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/active",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        return UserActive.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return UserActive.parse_obj(response)

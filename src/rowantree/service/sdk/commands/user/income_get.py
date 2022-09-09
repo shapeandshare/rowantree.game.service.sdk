@@ -1,12 +1,11 @@
 """ User Income Get Command Definition """
 
-import requests
-from requests import Response
+from starlette import status
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserIncomes
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserIncomeGetCommand(AbstractCommand):
@@ -20,7 +19,7 @@ class UserIncomeGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserIncomes:
+    def execute(self, user_guid: str) -> UserIncomes:
         """
         Executes the command.
 
@@ -28,8 +27,6 @@ class UserIncomeGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------
@@ -37,9 +34,10 @@ class UserIncomeGetCommand(AbstractCommand):
             A (unique) list of user incomes.
         """
 
-        response: Response = requests.get(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/income",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        return UserIncomes.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return UserIncomes.parse_obj(response)

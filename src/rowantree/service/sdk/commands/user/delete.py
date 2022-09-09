@@ -1,10 +1,10 @@
 """ User Delete Command Definition """
 
-import requests
+from starlette import status
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserDeleteCommand(AbstractCommand):
@@ -18,7 +18,7 @@ class UserDeleteCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> None:
+    def execute(self, user_guid: str) -> None:
         """
         Executes the command.
 
@@ -26,12 +26,11 @@ class UserDeleteCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
         """
 
-        requests.delete(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.DELETE,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
+        self.wrapped_request(request=request)

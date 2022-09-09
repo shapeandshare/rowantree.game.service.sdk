@@ -2,10 +2,7 @@
 The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
-from rowantree.auth.sdk.commands.authenticate_user import AuthenticateUserCommand
-from rowantree.auth.sdk.contracts.dto.authenticate_user_request import AuthenticateUserRequest
-from rowantree.auth.sdk.contracts.dto.token import Token
-from rowantree.common.sdk import demand_env_var
+
 from rowantree.contracts import (
     ActionQueue,
     User,
@@ -49,8 +46,6 @@ class RowanTreeService:
     Provides an interface for access the service layer.
     """
 
-    headers: dict[str, str] = {}
-
     user_active_get_command: UserActiveGetCommand
     user_active_set_command: UserActiveSetCommand
 
@@ -73,8 +68,6 @@ class RowanTreeService:
     action_queue_process_command: ActionQueueProcessCommand
     health_get_command: HealthGetCommand
     world_status_get_command: WorldStatusGetCommand
-
-    authenticate_user_command: AuthenticateUserCommand
 
     def __init__(self):
         self.user_active_get_command = UserActiveGetCommand()
@@ -100,19 +93,6 @@ class RowanTreeService:
         self.action_queue_process_command = ActionQueueProcessCommand()
         self.world_status_get_command = WorldStatusGetCommand()
 
-        self.authenticate_user_command = AuthenticateUserCommand()
-        self.authenticate()
-
-    # User Commands
-    def authenticate(self) -> None:
-        """Authenticates the session."""
-
-        request: AuthenticateUserRequest = AuthenticateUserRequest(
-            username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
-        )
-        auth_token: Token = self.authenticate_user_command.execute(request=request)
-        self.headers["Authorization"] = f"Bearer {auth_token.access_token}"
-
     def user_active_get(self, user_guid: str) -> UserActive:
         """
         Gets User Active State
@@ -128,7 +108,7 @@ class RowanTreeService:
             The user active state object.
         """
 
-        return self.user_active_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_active_get_command.execute(user_guid=user_guid)
 
     def user_active_set(self, user_guid: str, active: bool) -> UserActive:
         """
@@ -148,7 +128,7 @@ class RowanTreeService:
         """
 
         request: UserActive = UserActive(active=active)
-        return self.user_active_set_command.execute(user_guid=user_guid, request=request, headers=self.headers)
+        return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self) -> User:
         """
@@ -160,7 +140,7 @@ class RowanTreeService:
             The newly created user.
         """
 
-        return self.user_create_command.execute(headers=self.headers)
+        return self.user_create_command.execute()
 
     def user_delete(self, user_guid: str) -> None:
         """
@@ -172,7 +152,7 @@ class RowanTreeService:
             The target user guid.
         """
 
-        self.user_delete_command.execute(user_guid=user_guid, headers=self.headers)
+        self.user_delete_command.execute(user_guid=user_guid)
 
     def user_feature_active_get(self, user_guid: str, details: bool) -> UserFeature:
         """
@@ -191,7 +171,7 @@ class RowanTreeService:
             The active UserFeature.
         """
 
-        return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details, headers=self.headers)
+        return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
 
     def user_features_get(self, user_guid: str) -> UserFeatures:
         """
@@ -208,7 +188,7 @@ class RowanTreeService:
             A unique list of user features.
         """
 
-        return self.user_features_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_features_get_command.execute(user_guid=user_guid)
 
     def user_income_get(self, user_guid: str) -> UserIncomes:
         """
@@ -225,7 +205,7 @@ class RowanTreeService:
             A (unique) list of user incomes.
         """
 
-        return self.user_income_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_income_get_command.execute(user_guid=user_guid)
 
     def user_income_set(self, user_guid: str, income_source_name: str, amount: int) -> None:
         """
@@ -242,7 +222,7 @@ class RowanTreeService:
         """
 
         request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
-        self.user_income_set_command.execute(user_guid=user_guid, request=request, headers=self.headers)
+        self.user_income_set_command.execute(user_guid=user_guid, request=request)
 
     def user_merchant_transforms_get(self, user_guid: str) -> UserMerchants:
         """
@@ -259,7 +239,7 @@ class RowanTreeService:
             A (unique) list of user merchant transforms.
         """
 
-        return self.user_merchant_transforms_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_merchant_transforms_get_command.execute(user_guid=user_guid)
 
     def user_population_get(self, user_guid: str) -> UserPopulation:
         """
@@ -276,7 +256,7 @@ class RowanTreeService:
             User population object.
         """
 
-        return self.user_population_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_population_get_command.execute(user_guid=user_guid)
 
     def user_state_get(self, user_guid: str) -> UserState:
         """
@@ -293,7 +273,7 @@ class RowanTreeService:
             The user state object.
         """
 
-        return self.user_state_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_state_get_command.execute(user_guid=user_guid)
 
     def user_stores_get(self, user_guid: str) -> UserStores:
         """
@@ -310,7 +290,7 @@ class RowanTreeService:
             A (unique) list of user stores.
         """
 
-        return self.user_stores_get_command.execute(user_guid=user_guid, headers=self.headers)
+        return self.user_stores_get_command.execute(user_guid=user_guid)
 
     def user_transport(self, user_guid: str, location: str) -> UserFeature:
         """
@@ -330,7 +310,7 @@ class RowanTreeService:
         """
 
         request: UserTransportRequest = UserTransportRequest(location=location)
-        return self.user_transport_command.execute(user_guid=user_guid, request=request, headers=self.headers)
+        return self.user_transport_command.execute(user_guid=user_guid, request=request)
 
     # Merchant Commands
 
@@ -347,7 +327,7 @@ class RowanTreeService:
         """
 
         request: MerchantTransformRequest = MerchantTransformRequest(store_name=store_name)
-        self.merchant_transform_perform_command.execute(user_guid=user_guid, request=request, headers=self.headers)
+        self.merchant_transform_perform_command.execute(user_guid=user_guid, request=request)
 
     # Admin Commands
 
@@ -373,7 +353,7 @@ class RowanTreeService:
             The action queue to process.
         """
 
-        self.action_queue_process_command.execute(request=queue, headers=self.headers)
+        self.action_queue_process_command.execute(request=queue)
 
     def world_status_get(self) -> WorldStatus:
         """
@@ -385,4 +365,4 @@ class RowanTreeService:
             The world status.
         """
 
-        return self.world_status_get_command.execute(headers=self.headers)
+        return self.world_status_get_command.execute()

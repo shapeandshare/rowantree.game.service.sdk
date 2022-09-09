@@ -1,12 +1,11 @@
 """ User Create Command Definition """
 
-import requests
-from requests import Response
+from starlette import status
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import User
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserCreateCommand(AbstractCommand):
@@ -20,24 +19,25 @@ class UserCreateCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, headers: dict[str, str]) -> User:
+    def execute(self, user_guid: str) -> User:
         """
         Executes the command.
 
         Parameters
         ----------
-        headers: dict[str, str]
-            Request headers
+        user_guid: str
 
         Returns
         -------
         user: User
             The newly created user.
         """
-
-        response: Response = requests.post(
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.POST,
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}",
+            statuses=RequestStatusCodes(
+                allow=[status.HTTP_201_CREATED], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]
+            ),
         )
-        return User.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return User.parse_obj(response)

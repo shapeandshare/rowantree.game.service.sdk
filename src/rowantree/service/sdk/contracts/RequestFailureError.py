@@ -1,0 +1,2 @@
+class RequestFailureError(Exception):
+    """ """

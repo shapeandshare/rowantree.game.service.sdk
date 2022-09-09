@@ -2,11 +2,12 @@
 
 import requests
 from requests import Response
+from starlette import status
 
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 from rowantree.contracts import UserFeatures
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserFeaturesGetCommand(AbstractCommand):
@@ -20,7 +21,7 @@ class UserFeaturesGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserFeatures:
+    def execute(self, user_guid: str) -> UserFeatures:
         """
         Executes the command.
 
@@ -28,8 +29,6 @@ class UserFeaturesGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------
@@ -37,9 +36,10 @@ class UserFeaturesGetCommand(AbstractCommand):
             A unique list of user features.
         """
 
-        response: Response = requests.get(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/features",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        return UserFeatures.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return UserFeatures.parse_obj(response)

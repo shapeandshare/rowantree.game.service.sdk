@@ -1,12 +1,11 @@
 """ User Merchant Transforms Get Command Definition """
 
-import requests
-from requests import Response
+from starlette import status
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserMerchants
 
-from ..abstract_command import AbstractCommand
+from ..abstract_command import AbstractCommand, RequestStatusCodes, RequestVerb, WrappedRequest
 
 
 class UserMerchantTransformsGetCommand(AbstractCommand):
@@ -28,8 +27,6 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         ----------
         user_guid: str
             Target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------
@@ -37,9 +34,10 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
             A (unique) list of user merchant transforms.
         """
 
-        response: Response = requests.get(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/merchant",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        return UserMerchants.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return UserMerchants.parse_obj(response)
