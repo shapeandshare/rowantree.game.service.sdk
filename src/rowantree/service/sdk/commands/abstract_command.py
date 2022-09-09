@@ -1,5 +1,6 @@
 """ Abstract Command Definition """
 import json
+import logging
 import time
 from abc import abstractmethod
 from typing import Any, Optional
@@ -39,6 +40,7 @@ class AbstractCommand(BaseModel):
 
     def __init__(self, **data: Any):
         super().__init__(**data)
+        # If we are the first to need the singleton, then create it.
         if "Authorization" not in ROWANTREE_SERVICE_SDK_HEADERS:
             self._authenticate()
 
@@ -48,7 +50,12 @@ class AbstractCommand(BaseModel):
 
     # User Commands
     def _authenticate(self) -> None:
-        """Authenticates the session."""
+        """
+        Authenticates the session.
+
+        This method writes into ROWANTREE_SERVICE_SDK_HEADERS which is acting as a singleton
+        for use across all service sdk commands.
+        """
 
         request: AuthenticateUserRequest = AuthenticateUserRequest(
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
@@ -56,7 +63,22 @@ class AbstractCommand(BaseModel):
         auth_token: Token = self.authenticate_user_command.execute(request=request)
         ROWANTREE_SERVICE_SDK_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
 
-    def _build_requests_params(self, request: WrappedRequest) -> dict:
+    @staticmethod
+    def _build_requests_params(request: WrappedRequest) -> dict:
+        """
+        Builds the `requests` call parameters.
+
+        Parameters
+        ----------
+        request: WrappedRequest
+            The request to make.
+
+        Returns
+        -------
+        params: dict
+            A dictionary suitable for splatting into the `requests` call.
+        """
+
         params: dict = {
             "url": request.url,
             "headers": ROWANTREE_SERVICE_SDK_HEADERS,
@@ -69,19 +91,44 @@ class AbstractCommand(BaseModel):
         return params
 
     def _api_caller(self, request: WrappedRequest, depth: int) -> dict:
+        """
+        Wrapper for calls with `requests` to external APIs.
+
+        Parameters
+        ----------
+        request: WrappedRequest
+            Request to make.
+        depth: int
+            Call depth of the recursive call (retry)
+
+        Returns
+        -------
+        response: dict
+            A dictionary of the response.
+        """
+
         if depth < 1:
-            raise ExceededRetryCountError(request.json())
+            raise ExceededRetryCountError(json.dumps({"request": request.dict(), "depth": depth}))
         depth -= 1
 
-        params: dict = self._build_requests_params(request=request)
-        if request.verb == RequestVerb.GET:
-            response: Response = requests.get(**params)
-        elif request.verb == RequestVerb.POST:
-            response: Response = requests.post(**params)
-        elif request.verb == RequestVerb.DELETE:
-            response: Response = requests.delete(**params)
-        else:
-            raise Exception("Unknown Verb")
+        params: dict = AbstractCommand._build_requests_params(request=request)
+        try:
+            if request.verb == RequestVerb.GET:
+                response: Response = requests.get(**params)
+            elif request.verb == RequestVerb.POST:
+                response: Response = requests.post(**params)
+            elif request.verb == RequestVerb.DELETE:
+                response: Response = requests.delete(**params)
+            else:
+                raise Exception("Unknown Verb")
+        except requests.exceptions.ConnectionError as error:
+            logging.debug("Connection Error - Retrying.. %i", depth)
+            time.sleep(self.sleep_time)
+            return self._api_caller(request=request, depth=depth)
+        except Exception as error:
+            logging.debug(f"Exception needed to cover: %s", str(error))
+            time.sleep(self.sleep_time)
+            return self._api_caller(request=request, depth=depth)
 
         if response.status_code in request.statuses.allow:
             return response.json()
@@ -94,7 +141,24 @@ class AbstractCommand(BaseModel):
             self._authenticate()
             return self._api_caller(request=request, depth=depth)
 
-        raise RequestFailureError(json.dumps({"status_code": response.status_code, "request": request.dict()}))
+        raise RequestFailureError(
+            json.dumps({"status_code": response.status_code, "request": request.dict(), "depth": depth})
+        )
 
     def wrapped_request(self, request: WrappedRequest) -> dict:
+        """
+        High level request method.  Entry point for consumption.
+
+
+        Parameters
+        ----------
+        request: WrappedRequest
+            The request to make.
+
+        Returns
+        -------
+        response: dict
+            The response as a dictionary.
+        """
+
         return self._api_caller(request=request, depth=self.retry_count)
