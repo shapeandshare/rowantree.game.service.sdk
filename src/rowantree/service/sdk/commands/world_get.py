@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import WorldStatus
 
 from .abstract_command import AbstractCommand
@@ -27,9 +28,13 @@ class WorldStatusGetCommand(AbstractCommand):
         -------
         world_status: WorldStatus
             The world status.
+        headers: dict[str, str]
+            Request headers
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/world", headers=headers, timeout=self.config.timeout
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/world",
+            headers=headers,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return WorldStatus.parse_obj(response.json())

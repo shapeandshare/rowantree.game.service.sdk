@@ -2,6 +2,8 @@
 
 import requests
 
+from rowantree.common.sdk import demand_env_var
+
 from ..contracts.requests.merchant_transform import MerchantTransformRequest
 from .abstract_command import AbstractCommand
 
@@ -27,11 +29,13 @@ class MerchantTransformPerformCommand(AbstractCommand):
             The target user guid.
         request: MerchantTransformRequest
             The merchant transform request.
+        headers: dict[str, str]
+            Request headers
         """
 
         requests.post(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/merchant",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/merchant",
             data=request.json(by_alias=True),
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )

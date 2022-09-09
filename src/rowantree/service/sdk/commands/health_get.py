@@ -3,6 +3,8 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
+
 from .abstract_command import AbstractCommand
 
 
@@ -27,5 +29,8 @@ class HealthGetCommand(AbstractCommand):
             The server health (true or false).
         """
 
-        response: Response = requests.get(url=f"{self.config.endpoint}/health/plain", timeout=self.config.timeout)
+        response: Response = requests.get(
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/health/plain",
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+        )
         return bool(response.text)

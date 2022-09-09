@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import User
 
 from ..abstract_command import AbstractCommand
@@ -23,6 +24,11 @@ class UserCreateCommand(AbstractCommand):
         """
         Executes the command.
 
+        Parameters
+        ----------
+        headers: dict[str, str]
+            Request headers
+
         Returns
         -------
         user: User
@@ -30,6 +36,8 @@ class UserCreateCommand(AbstractCommand):
         """
 
         response: Response = requests.post(
-            url=f"{self.config.endpoint}/v1/user", headers=headers, timeout=self.config.timeout
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user",
+            headers=headers,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return User.parse_obj(response.json())

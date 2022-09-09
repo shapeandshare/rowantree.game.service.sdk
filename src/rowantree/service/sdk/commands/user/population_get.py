@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserPopulation
 
 from ..abstract_command import AbstractCommand
@@ -27,6 +28,8 @@ class UserPopulationGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------
@@ -35,8 +38,8 @@ class UserPopulationGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/population",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/population",
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return UserPopulation.parse_obj(response.json())
