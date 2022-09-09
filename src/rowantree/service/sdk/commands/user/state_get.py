@@ -19,7 +19,7 @@ class UserStateGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserState:
+    def execute(self, user_guid: str) -> UserState:
         """
         Executes the command.
 
@@ -27,8 +27,6 @@ class UserStateGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------

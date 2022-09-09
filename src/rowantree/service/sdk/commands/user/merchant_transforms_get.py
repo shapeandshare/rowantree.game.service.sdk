@@ -19,7 +19,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserMerchants:
+    def execute(self, user_guid: str) -> UserMerchants:
         """
         Executes the command.
 

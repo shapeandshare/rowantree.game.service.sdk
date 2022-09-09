@@ -19,7 +19,7 @@ class UserPopulationGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserPopulation:
+    def execute(self, user_guid: str) -> UserPopulation:
         """
         Executes the command.
 
@@ -27,8 +27,6 @@ class UserPopulationGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------

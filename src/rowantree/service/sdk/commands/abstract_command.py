@@ -33,8 +33,8 @@ class WrappedRequest(BaseModel):
     verb: RequestVerb
     statuses: RequestStatusCodes
     url: str
-    data: Optional[dict, str]
-    params: Optional[str, str]
+    data: Optional[Any]  # str or dict ? - needs confirmation
+    params: Optional[dict[str, str]]
 
 
 class AbstractCommand(BaseModel):
