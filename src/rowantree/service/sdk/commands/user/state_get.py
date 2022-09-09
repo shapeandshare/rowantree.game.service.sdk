@@ -1,11 +1,13 @@
 """ User State Get Command Definition """
 
-import requests
-from requests import Response
+from starlette import status
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserState
 
+from ...contracts.dto.request_status_codes import RequestStatusCodes
+from ...contracts.dto.wrapped_request import WrappedRequest
+from ...contracts.request_verb import RequestVerb
 from ..abstract_command import AbstractCommand
 
 
@@ -20,7 +22,7 @@ class UserStateGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, headers: dict[str, str]) -> UserState:
+    def execute(self, user_guid: str) -> UserState:
         """
         Executes the command.
 
@@ -28,8 +30,6 @@ class UserStateGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        headers: dict[str, str]
-            Request headers
 
         Returns
         -------
@@ -37,9 +37,10 @@ class UserStateGetCommand(AbstractCommand):
             The user state object.
         """
 
-        response: Response = requests.get(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/state",
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        return UserState.parse_obj(response.json())
+        response: dict = self.wrapped_request(request=request)
+        return UserState.parse_obj(response)

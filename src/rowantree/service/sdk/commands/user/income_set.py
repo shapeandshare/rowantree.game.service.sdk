@@ -1,8 +1,12 @@
 """ User Income Set Command Definition """
-import requests
 
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from starlette import status
 
+from rowantree.common.sdk import demand_env_var
+
+from ...contracts.dto.request_status_codes import RequestStatusCodes
+from ...contracts.dto.wrapped_request import WrappedRequest
+from ...contracts.request_verb import RequestVerb
 from ...contracts.requests.user.income_set import UserIncomeSetRequest
 from ..abstract_command import AbstractCommand
 
@@ -18,7 +22,7 @@ class UserIncomeSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserIncomeSetRequest, headers: dict[str, str]) -> None:
+    def execute(self, user_guid: str, request: UserIncomeSetRequest) -> None:
         """
         Executes the command.
 
@@ -28,13 +32,12 @@ class UserIncomeSetCommand(AbstractCommand):
             The target user guid.
         request: UserIncomeSetRequest
             The UserIncomeSetRequest object for the update.
-        headers: dict[str, str]
-            Request headers
         """
 
-        requests.post(
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.POST,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/income",
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.json(by_alias=True),
-            headers=headers,
-            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
+        self.wrapped_request(request=request)
