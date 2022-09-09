@@ -130,9 +130,14 @@ class RowanTreeService:
         request: UserActive = UserActive(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
-    def user_create(self) -> User:
+    def user_create(self, user_guid: str) -> User:
         """
         Creates a user.
+
+        Parameters
+        ----------
+        user_guid: str
+            The target user guid.
 
         Returns
         -------
@@ -140,7 +145,7 @@ class RowanTreeService:
             The newly created user.
         """
 
-        return self.user_create_command.execute()
+        return self.user_create_command.execute(user_guid=user_guid)
 
     def user_delete(self, user_guid: str) -> None:
         """

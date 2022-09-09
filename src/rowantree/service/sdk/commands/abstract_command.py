@@ -26,7 +26,6 @@ class RequestStatusCodes(BaseModel):
     allow: list[int]
     retry: list[int]
     reauth: list[int]
-    # fail: list[int]
 
 
 class WrappedRequest(BaseModel):
@@ -37,30 +36,31 @@ class WrappedRequest(BaseModel):
     params: Optional[dict[str, str]]
 
 
+# Acts as a singleton for auth across multiple commands.
+headers: dict[str, str] = {}
+
+
 class AbstractCommand(BaseModel):
     """
     Abstract Command
 
     Attributes
     ----------
-    headers: dict[str, str] = {}
-        Headers needed for the requests.
     timeout: float = 30
         The default timeout of requests.
     """
 
-    headers: dict[str, str] = {}
     sleep_time: float = 1
     retry_count: int = 5
-    authenticate_user_command: Optional[AuthenticateUserCommand]
+    authenticate_user_command: AuthenticateUserCommand = AuthenticateUserCommand()
 
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, **data: Any):
         super().__init__(**data)
-        self.authenticate_user_command = AuthenticateUserCommand()
-        self._authenticate()
+        if "Authorization" not in headers:
+            self._authenticate()
 
     @abstractmethod
     def execute(self, *args, **kwargs) -> Optional[Any]:
@@ -74,12 +74,12 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
-        self.headers["Authorization"] = f"Bearer {auth_token.access_token}"
+        headers["Authorization"] = f"Bearer {auth_token.access_token}"
 
     def _build_requests_params(self, request: WrappedRequest) -> dict:
         params: dict = {
             "url": request.url,
-            "headers": self.headers,
+            "headers": headers,
             "timeout": demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         }
         if request.verb == RequestVerb.POST:
