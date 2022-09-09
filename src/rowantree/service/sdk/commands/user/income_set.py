@@ -1,7 +1,7 @@
 """ User Income Set Command Definition """
 import requests
 
-from rowantree.common.sdk import demand_env_var
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 
 from ...contracts.requests.user.income_set import UserIncomeSetRequest
 from ..abstract_command import AbstractCommand
@@ -36,5 +36,5 @@ class UserIncomeSetCommand(AbstractCommand):
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/income",
             data=request.json(by_alias=True),
             headers=headers,
-            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         )

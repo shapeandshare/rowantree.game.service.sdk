@@ -2,7 +2,7 @@
 import requests
 from requests import Response
 
-from rowantree.common.sdk import demand_env_var
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 from rowantree.contracts import UserActive
 
 from ..abstract_command import AbstractCommand
@@ -43,6 +43,6 @@ class UserActiveSetCommand(AbstractCommand):
             # TODO: In the future when this is the user object we will need to white list (or black list properties).
             data=request.json(by_alias=True, exclude={"state"}),
             headers=headers,
-            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return UserActive.parse_obj(response.json())
