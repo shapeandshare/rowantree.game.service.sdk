@@ -2,7 +2,7 @@
 
 import requests
 
-from rowantree.common.sdk import demand_env_var
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 
 from ..contracts.requests.merchant_transform import MerchantTransformRequest
 from .abstract_command import AbstractCommand
@@ -37,5 +37,5 @@ class MerchantTransformPerformCommand(AbstractCommand):
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/merchant",
             data=request.json(by_alias=True),
             headers=headers,
-            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         )

@@ -3,7 +3,7 @@
 import requests
 from requests import Response
 
-from rowantree.common.sdk import demand_env_var
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 
 from .abstract_command import AbstractCommand
 
@@ -31,6 +31,6 @@ class HealthGetCommand(AbstractCommand):
 
         response: Response = requests.get(
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/health/plain",
-            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+            timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return bool(response.text)
