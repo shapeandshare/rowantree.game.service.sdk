@@ -105,6 +105,8 @@ class RowanTreeService:
 
     # User Commands
     def authenticate(self) -> None:
+        """Authenticates the session."""
+
         request: AuthenticateUserRequest = AuthenticateUserRequest(
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )

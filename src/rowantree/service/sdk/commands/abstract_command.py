@@ -21,9 +21,6 @@ class AbstractCommand(BaseModel):
     headers: dict[str, str] = {}
     timeout: float = 30
 
-    def __init__(self, **data: Any):
-        super().__init__(**data)
-
     @abstractmethod
     def execute(self, *args, **kwargs) -> Optional[Any]:
         """Command entry point"""
