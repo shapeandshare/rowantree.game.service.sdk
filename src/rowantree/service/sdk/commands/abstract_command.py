@@ -36,6 +36,8 @@ class AbstractCommand(BaseModel):
     authenticate_user_command: AuthenticateUserCommand = AuthenticateUserCommand()
 
     class Config:
+        """Pydantic Config Over-ride"""
+
         arbitrary_types_allowed = True
 
     def __init__(self, **data: Any):
@@ -112,6 +114,7 @@ class AbstractCommand(BaseModel):
         depth -= 1
 
         params: dict = AbstractCommand._build_requests_params(request=request)
+        # pylint: disable=broad-except
         try:
             if request.verb == RequestVerb.GET:
                 response: Response = requests.get(**params)
@@ -122,11 +125,11 @@ class AbstractCommand(BaseModel):
             else:
                 raise Exception("Unknown Verb")
         except requests.exceptions.ConnectionError as error:
-            logging.debug("Connection Error - Retrying.. %i", depth)
+            logging.debug("Connection Error (%s) - Retrying.. %i", str(error), depth)
             time.sleep(self.sleep_time)
             return self._api_caller(request=request, depth=depth)
         except Exception as error:
-            logging.debug(f"Exception needed to cover: %s", str(error))
+            logging.debug("Exception needed to cover: %s", str(error))
             time.sleep(self.sleep_time)
             return self._api_caller(request=request, depth=depth)
 
