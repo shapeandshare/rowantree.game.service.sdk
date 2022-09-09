@@ -31,6 +31,8 @@ class UserTransportCommand(AbstractCommand):
             The target user guid.
         request: UserTransportRequest
             The UserTransportRequest to perform.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------

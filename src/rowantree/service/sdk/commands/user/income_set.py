@@ -28,6 +28,8 @@ class UserIncomeSetCommand(AbstractCommand):
             The target user guid.
         request: UserIncomeSetRequest
             The UserIncomeSetRequest object for the update.
+        headers: dict[str, str]
+            Request headers
         """
 
         requests.post(

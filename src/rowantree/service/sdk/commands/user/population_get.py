@@ -28,6 +28,8 @@ class UserPopulationGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------

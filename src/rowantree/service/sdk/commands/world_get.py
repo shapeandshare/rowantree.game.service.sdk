@@ -28,6 +28,8 @@ class WorldStatusGetCommand(AbstractCommand):
         -------
         world_status: WorldStatus
             The world status.
+        headers: dict[str, str]
+            Request headers
         """
 
         response: Response = requests.get(

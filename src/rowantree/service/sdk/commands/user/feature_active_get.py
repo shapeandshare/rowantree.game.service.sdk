@@ -30,6 +30,8 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             The target user guid.
         details: bool
             Whether to include details of the feature.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------

@@ -29,6 +29,8 @@ class MerchantTransformPerformCommand(AbstractCommand):
             The target user guid.
         request: MerchantTransformRequest
             The merchant transform request.
+        headers: dict[str, str]
+            Request headers
         """
 
         requests.post(

@@ -28,6 +28,8 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         ----------
         user_guid: str
             Target user guid.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------

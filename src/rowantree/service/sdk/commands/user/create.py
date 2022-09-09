@@ -24,6 +24,11 @@ class UserCreateCommand(AbstractCommand):
         """
         Executes the command.
 
+        Parameters
+        ----------
+        headers: dict[str, str]
+            Request headers
+
         Returns
         -------
         user: User

@@ -29,6 +29,8 @@ class UserActiveSetCommand(AbstractCommand):
             The user guid to target.
         request: UserActive
             The active state to set the user to.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------

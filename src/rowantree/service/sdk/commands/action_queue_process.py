@@ -27,6 +27,8 @@ class ActionQueueProcessCommand(AbstractCommand):
         ----------
         request: ActionQueue
             The action queue to process.
+        headers: dict[str, str]
+            Request headers
         """
 
         requests.post(

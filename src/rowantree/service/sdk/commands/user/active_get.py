@@ -27,6 +27,8 @@ class UserActiveGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The user guid to look up.
+        headers: dict[str, str]
+            Request headers
 
         Returns
         -------
