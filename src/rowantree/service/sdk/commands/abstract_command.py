@@ -17,7 +17,7 @@ from ..contracts.request_failure_error import RequestFailureError
 from ..contracts.request_verb import RequestVerb
 
 # Acts as a singleton for auth across multiple commands.
-ABSTRACT_COMMAND_HEADERS: dict[str, str] = {}
+ROWANTREE_SERVICE_SDK_HEADERS: dict[str, str] = {}
 
 
 class AbstractCommand(BaseModel):
@@ -39,7 +39,7 @@ class AbstractCommand(BaseModel):
 
     def __init__(self, **data: Any):
         super().__init__(**data)
-        if "Authorization" not in ABSTRACT_COMMAND_HEADERS:
+        if "Authorization" not in ROWANTREE_SERVICE_SDK_HEADERS:
             self._authenticate()
 
     @abstractmethod
@@ -54,12 +54,12 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
-        ABSTRACT_COMMAND_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
+        ROWANTREE_SERVICE_SDK_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
 
     def _build_requests_params(self, request: WrappedRequest) -> dict:
         params: dict = {
             "url": request.url,
-            "headers": ABSTRACT_COMMAND_HEADERS,
+            "headers": ROWANTREE_SERVICE_SDK_HEADERS,
             "timeout": demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
         }
         if request.verb == RequestVerb.POST:
