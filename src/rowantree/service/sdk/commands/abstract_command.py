@@ -11,8 +11,9 @@ from requests import Response
 
 from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest, Token
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
-from src.rowantree.service.sdk.contracts.ExceededRetryCountError import ExceededRetryCountError
-from src.rowantree.service.sdk.contracts.RequestFailureError import RequestFailureError
+
+from ..contracts.ExceededRetryCountError import ExceededRetryCountError
+from ..contracts.RequestFailureError import RequestFailureError
 
 
 class RequestVerb(str, Enum):
