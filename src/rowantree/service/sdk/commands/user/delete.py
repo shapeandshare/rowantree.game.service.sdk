@@ -2,6 +2,8 @@
 
 import requests
 
+from rowantree.common.sdk import demand_env_var
+
 from ..abstract_command import AbstractCommand
 
 
@@ -26,4 +28,8 @@ class UserDeleteCommand(AbstractCommand):
             The target user guid.
         """
 
-        requests.delete(url=f"{self.config.endpoint}/v1/user/{user_guid}", headers=headers, timeout=self.config.timeout)
+        requests.delete(
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}",
+            headers=headers,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
+        )

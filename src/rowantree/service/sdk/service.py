@@ -3,9 +3,9 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 from rowantree.auth.sdk.commands.authenticate_user import AuthenticateUserCommand
-from rowantree.auth.sdk.config.auth import AuthConfig
 from rowantree.auth.sdk.contracts.dto.authenticate_user_request import AuthenticateUserRequest
 from rowantree.auth.sdk.contracts.dto.token import Token
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import (
     ActionQueue,
     User,
@@ -37,7 +37,6 @@ from .commands.user.state_get import UserStateGetCommand
 from .commands.user.stores_get import UserStoresGetCommand
 from .commands.user.transport import UserTransportCommand
 from .commands.world_get import WorldStatusGetCommand
-from .common.config import Config
 from .contracts.requests.merchant_transform import MerchantTransformRequest
 from .contracts.requests.user.income_set import UserIncomeSetRequest
 from .contracts.requests.user.transport import UserTransportRequest
@@ -50,7 +49,6 @@ class RowanTreeService:
     Provides an interface for access the service layer.
     """
 
-    config: Config
     headers: dict[str, str] = {}
 
     user_active_get_command: UserActiveGetCommand
@@ -79,38 +77,36 @@ class RowanTreeService:
     authenticate_user_command: AuthenticateUserCommand
 
     def __init__(self):
-        self.config = Config()
+        self.user_active_get_command = UserActiveGetCommand()
+        self.user_active_set_command = UserActiveSetCommand()
 
-        self.user_active_get_command = UserActiveGetCommand(config=self.config)
-        self.user_active_set_command = UserActiveSetCommand(config=self.config)
+        self.user_create_command = UserCreateCommand()
+        self.user_delete_command = UserDeleteCommand()
 
-        self.user_create_command = UserCreateCommand(config=self.config)
-        self.user_delete_command = UserDeleteCommand(config=self.config)
+        self.user_feature_active_get_command = UserFeatureActiveGetCommand()
+        self.user_features_get_command = UserFeaturesGetCommand()
 
-        self.user_feature_active_get_command = UserFeatureActiveGetCommand(config=self.config)
-        self.user_features_get_command = UserFeaturesGetCommand(config=self.config)
+        self.user_income_get_command = UserIncomeGetCommand()
+        self.user_income_set_command = UserIncomeSetCommand()
 
-        self.user_income_get_command = UserIncomeGetCommand(config=self.config)
-        self.user_income_set_command = UserIncomeSetCommand(config=self.config)
+        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand()
+        self.user_population_get_command = UserPopulationGetCommand()
+        self.user_state_get_command = UserStateGetCommand()
+        self.user_stores_get_command = UserStoresGetCommand()
+        self.user_transport_command = UserTransportCommand()
 
-        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand(config=self.config)
-        self.user_population_get_command = UserPopulationGetCommand(config=self.config)
-        self.user_state_get_command = UserStateGetCommand(config=self.config)
-        self.user_stores_get_command = UserStoresGetCommand(config=self.config)
-        self.user_transport_command = UserTransportCommand(config=self.config)
+        self.merchant_transform_perform_command = MerchantTransformPerformCommand()
+        self.health_get_command = HealthGetCommand()
+        self.action_queue_process_command = ActionQueueProcessCommand()
+        self.world_status_get_command = WorldStatusGetCommand()
 
-        self.merchant_transform_perform_command = MerchantTransformPerformCommand(config=self.config)
-        self.health_get_command = HealthGetCommand(config=self.config)
-        self.action_queue_process_command = ActionQueueProcessCommand(config=self.config)
-        self.world_status_get_command = WorldStatusGetCommand(config=self.config)
-
-        self.authenticate_user_command = AuthenticateUserCommand(config=AuthConfig())
+        self.authenticate_user_command = AuthenticateUserCommand()
         self.authenticate()
 
     # User Commands
     def authenticate(self) -> None:
         request: AuthenticateUserRequest = AuthenticateUserRequest(
-            username=self.config.username, password=self.config.password
+            username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
         self.headers["Authorization"] = f"Bearer {auth_token.access_token}"

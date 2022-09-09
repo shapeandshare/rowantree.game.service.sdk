@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserMerchants
 
 from ..abstract_command import AbstractCommand
@@ -35,8 +36,8 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/merchant",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/merchant",
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return UserMerchants.parse_obj(response.json())

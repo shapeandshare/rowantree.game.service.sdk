@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserFeature
 
 from ..abstract_command import AbstractCommand
@@ -37,9 +38,9 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         """
 
         response: Response = requests.get(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/features/active",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/features/active",
             params={"details": details},
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return UserFeature.parse_obj(response.json())

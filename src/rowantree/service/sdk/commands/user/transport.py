@@ -3,6 +3,7 @@
 import requests
 from requests import Response
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserFeature
 
 from ...contracts.requests.user.transport import UserTransportRequest
@@ -38,9 +39,9 @@ class UserTransportCommand(AbstractCommand):
         """
 
         response: Response = requests.post(
-            url=f"{self.config.endpoint}/v1/user/{user_guid}/transport",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/transport",
             data=request.json(by_alias=True),
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
         return UserFeature.parse_obj(response.json())

@@ -2,6 +2,7 @@
 
 import requests
 
+from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import ActionQueue
 
 from .abstract_command import AbstractCommand
@@ -29,8 +30,8 @@ class ActionQueueProcessCommand(AbstractCommand):
         """
 
         requests.post(
-            url=f"{self.config.endpoint}/v1/world/queue",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/world/queue",
             data=request.json(by_alias=True),
             headers=headers,
-            timeout=self.config.timeout,
+            timeout=demand_env_var(name="ROWANTREE_SERVICE_TIMEOUT"),
         )
