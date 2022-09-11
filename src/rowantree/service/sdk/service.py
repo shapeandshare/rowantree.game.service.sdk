@@ -155,7 +155,7 @@ class RowanTreeService:
 
         self.user_delete_command.execute(user_guid=user_guid)
 
-    def user_feature_active_get(self, user_guid: str, details: bool) -> ActiveFeatureResponse:
+    def user_feature_active_get(self, user_guid: str) -> ActiveFeatureResponse:
         """
         Gets the active user feature.
 
@@ -163,8 +163,6 @@ class RowanTreeService:
         ----------
         user_guid: str
             The target user guid.
-        details: bool
-            Whether to include details of the feature.
 
         Returns
         -------
@@ -172,7 +170,7 @@ class RowanTreeService:
             The ActiveFeatureResponse.
         """
 
-        return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
+        return self.user_feature_active_get_command.execute(user_guid=user_guid)
 
     def user_features_get(self, user_guid: str) -> FeaturesGetResponse:
         """
