@@ -189,7 +189,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_features: UserFeatures
+        user_features: FeaturesGetResponse
             A unique list of user features.
         """
 
@@ -206,7 +206,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_incomes: UserIncomes
+        user_incomes: UserIncomeGetResponse
             A (unique) list of user incomes.
         """
 
@@ -240,7 +240,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_merchants: UserMerchants
+        user_merchants: MerchantTransformsGetResponse
             A (unique) list of user merchant transforms.
         """
 
@@ -291,7 +291,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_stores: UserStores
+        user_stores: StoresGetResponse
             A (unique) list of user stores.
         """
 
@@ -366,7 +366,7 @@ class RowanTreeService:
 
         Returns
         -------
-        world_status: WorldStatus
+        world_status: WorldStatusGetResponse
             The world status.
         """
 
