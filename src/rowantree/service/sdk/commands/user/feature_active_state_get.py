@@ -1,18 +1,18 @@
-""" User Feature Active Get Command """
+""" User Feature Active State Get Command """
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import UserFeatureState
 
-from ... import ActiveFeatureResponse
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
 from ...contracts.request_verb import RequestVerb
 from ..abstract_command import AbstractCommand
 
 
-class UserFeatureActiveGetCommand(AbstractCommand):
+class UserFeatureActiveStateGetCommand(AbstractCommand):
     """
-    User Feature Active Get Command
+    User Feature Active State Get Command
     Gets the active user feature.
 
     Methods
@@ -21,7 +21,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, details: bool) -> ActiveFeatureResponse:
+    def execute(self, user_guid: str, details: bool) -> UserFeatureState:
         """
         Executes the command.
 
@@ -34,8 +34,8 @@ class UserFeatureActiveGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_feature: UserFeature
-            The active UserFeature.
+        user_feature: UserFeatureState
+            The active UserFeatureState.
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -45,4 +45,4 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             params={"details": details},
         )
         response: dict = self.wrapped_request(request=request)
-        return ActiveFeatureResponse.parse_obj(response)
+        return UserFeatureState.parse_obj(response)
