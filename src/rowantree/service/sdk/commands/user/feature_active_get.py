@@ -21,7 +21,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, details: bool) -> ActiveFeatureResponse:
+    def execute(self, user_guid: str) -> ActiveFeatureResponse:
         """
         Executes the command.
 
@@ -29,8 +29,6 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         ----------
         user_guid: str
             The target user guid.
-        details: bool
-            Whether to include details of the feature.
 
         Returns
         -------
@@ -42,7 +40,6 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             verb=RequestVerb.GET,
             url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/features/active",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
-            params={"details": details},
         )
         response: dict = self.wrapped_request(request=request)
         return ActiveFeatureResponse.parse_obj(response)
