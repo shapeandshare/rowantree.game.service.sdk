@@ -3,19 +3,7 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 
-from rowantree.contracts import (
-    ActionQueue,
-    User,
-    UserActive,
-    UserFeature,
-    UserFeatures,
-    UserIncomes,
-    UserMerchants,
-    UserPopulation,
-    UserState,
-    UserStores,
-    WorldStatus,
-)
+from rowantree.contracts import ActionQueue, User, UserFeature, UserState
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand
@@ -37,6 +25,13 @@ from .commands.world_get import WorldStatusGetCommand
 from .contracts.requests.merchant_transform import MerchantTransformRequest
 from .contracts.requests.user.income_set import UserIncomeSetRequest
 from .contracts.requests.user.transport import UserTransportRequest
+from .contracts.responses.features_get import FeaturesGetResponse
+from .contracts.responses.income_get import UserIncomeGetResponse
+from .contracts.responses.merchant_transforms_get import MerchantTransformsGetResponse
+from .contracts.responses.population_get import PopulationGetResponse
+from .contracts.responses.stores_get import StoresGetResponse
+from .contracts.responses.world_status_get import WorldStatusGetResponse
+from .contracts.user_active_status import UserActiveGetStatus
 
 
 # pylint: disable=too-many-instance-attributes
@@ -93,7 +88,7 @@ class RowanTreeService:
         self.action_queue_process_command = ActionQueueProcessCommand()
         self.world_status_get_command = WorldStatusGetCommand()
 
-    def user_active_get(self, user_guid: str) -> UserActive:
+    def user_active_get(self, user_guid: str) -> UserActiveGetStatus:
         """
         Gets User Active State
 
@@ -104,13 +99,13 @@ class RowanTreeService:
 
         Returns
         -------
-        user_active: UserActive
+        user_active: UserActiveGetStatus
             The user active state object.
         """
 
         return self.user_active_get_command.execute(user_guid=user_guid)
 
-    def user_active_set(self, user_guid: str, active: bool) -> UserActive:
+    def user_active_set(self, user_guid: str, active: bool) -> UserActiveGetStatus:
         """
         Sets the user active state.
 
@@ -123,11 +118,11 @@ class RowanTreeService:
 
         Returns
         -------
-        user_active: UserActive
+        user_active: UserActiveGetStatus
             The state of the user.
         """
 
-        request: UserActive = UserActive(active=active)
+        request: UserActiveGetStatus = UserActiveGetStatus(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self, user_guid: str) -> User:
@@ -178,7 +173,7 @@ class RowanTreeService:
 
         return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
 
-    def user_features_get(self, user_guid: str) -> UserFeatures:
+    def user_features_get(self, user_guid: str) -> FeaturesGetResponse:
         """
         Gets a (unique) list of user features.
 
@@ -195,7 +190,7 @@ class RowanTreeService:
 
         return self.user_features_get_command.execute(user_guid=user_guid)
 
-    def user_income_get(self, user_guid: str) -> UserIncomes:
+    def user_income_get(self, user_guid: str) -> UserIncomeGetResponse:
         """
         Gets (unique) list of user incomes.
 
@@ -229,7 +224,7 @@ class RowanTreeService:
         request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
         self.user_income_set_command.execute(user_guid=user_guid, request=request)
 
-    def user_merchant_transforms_get(self, user_guid: str) -> UserMerchants:
+    def user_merchant_transforms_get(self, user_guid: str) -> MerchantTransformsGetResponse:
         """
         Gets a (unique) list of user merchant transforms.
 
@@ -241,12 +236,12 @@ class RowanTreeService:
         Returns
         -------
         user_merchants: MerchantTransformsGetResponse
-            A (unique) list of user merchant transforms.
+            A (unique) set of user merchant transforms.
         """
 
         return self.user_merchant_transforms_get_command.execute(user_guid=user_guid)
 
-    def user_population_get(self, user_guid: str) -> UserPopulation:
+    def user_population_get(self, user_guid: str) -> PopulationGetResponse:
         """
         Gets the user population.
 
@@ -257,7 +252,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_population: UserPopulation
+        user_population: PopulationGetResponse
             User population object.
         """
 
@@ -280,7 +275,7 @@ class RowanTreeService:
 
         return self.user_state_get_command.execute(user_guid=user_guid)
 
-    def user_stores_get(self, user_guid: str) -> UserStores:
+    def user_stores_get(self, user_guid: str) -> StoresGetResponse:
         """
         Gets the (unique) list of user stores.
 
@@ -360,7 +355,7 @@ class RowanTreeService:
 
         self.action_queue_process_command.execute(request=queue)
 
-    def world_status_get(self) -> WorldStatus:
+    def world_status_get(self) -> WorldStatusGetResponse:
         """
         Gets the world status.
 
