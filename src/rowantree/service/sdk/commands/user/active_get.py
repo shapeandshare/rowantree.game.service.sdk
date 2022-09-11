@@ -3,11 +3,11 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
-from rowantree.contracts import UserActive
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
 from ...contracts.request_verb import RequestVerb
+from ...contracts.user_active_status import UserActiveGetStatus
 from ..abstract_command import AbstractCommand
 
 
@@ -18,11 +18,11 @@ class UserActiveGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str) -> UserActive
+    execute(self, user_guid: str) -> UserActiveGetStatus
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserActive:
+    def execute(self, user_guid: str) -> UserActiveGetStatus:
         """
         Executes the command.
 
@@ -33,7 +33,7 @@ class UserActiveGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_active: UserActive
+        user_active: UserActiveGetStatus
             The user active state object.
         """
 
@@ -43,4 +43,4 @@ class UserActiveGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return UserActive.parse_obj(response)
+        return UserActiveGetStatus.parse_obj(response)
