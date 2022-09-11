@@ -1,7 +1,7 @@
 """ FeaturesGetResponse Definition """
 from pydantic import BaseModel
 
-from rowantree.contracts import FeatureType, UserFeature
+from rowantree.contracts import FeatureType
 
 
 class FeaturesGetResponse(BaseModel):
@@ -11,8 +11,8 @@ class FeaturesGetResponse(BaseModel):
 
     Attributes
     ----------
-    features: dict[FeatureType, UserFeature]
-        A dictionary of user features, keyed by feature name.
+    features: set[FeatureType]
+        A set of user feature types.
     """
 
-    features: dict[FeatureType, UserFeature]
+    features: set[FeatureType]

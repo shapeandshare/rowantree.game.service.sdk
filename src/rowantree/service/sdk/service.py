@@ -3,7 +3,7 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 
-from rowantree.contracts import ActionQueue, User, UserFeature, UserState
+from rowantree.contracts import ActionQueue, User, UserState
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand
@@ -25,6 +25,7 @@ from .commands.world_get import WorldStatusGetCommand
 from .contracts.requests.merchant_transform import MerchantTransformRequest
 from .contracts.requests.user.income_set import UserIncomeSetRequest
 from .contracts.requests.user.transport import UserTransportRequest
+from .contracts.responses.active_feature import ActiveFeatureResponse
 from .contracts.responses.features_get import FeaturesGetResponse
 from .contracts.responses.income_get import UserIncomeGetResponse
 from .contracts.responses.merchant_transforms_get import MerchantTransformsGetResponse
@@ -154,7 +155,7 @@ class RowanTreeService:
 
         self.user_delete_command.execute(user_guid=user_guid)
 
-    def user_feature_active_get(self, user_guid: str, details: bool) -> UserFeature:
+    def user_feature_active_get(self, user_guid: str, details: bool) -> ActiveFeatureResponse:
         """
         Gets the active user feature.
 
@@ -167,8 +168,8 @@ class RowanTreeService:
 
         Returns
         -------
-        user_feature: UserFeature
-            The active UserFeature.
+        user_feature: ActiveFeatureResponse
+            The ActiveFeatureResponse.
         """
 
         return self.user_feature_active_get_command.execute(user_guid=user_guid, details=details)
@@ -292,7 +293,7 @@ class RowanTreeService:
 
         return self.user_stores_get_command.execute(user_guid=user_guid)
 
-    def user_transport(self, user_guid: str, location: str) -> UserFeature:
+    def user_transport(self, user_guid: str, location: str) -> ActiveFeatureResponse:
         """
         Performs a user transport. (feature to feature change)
 
