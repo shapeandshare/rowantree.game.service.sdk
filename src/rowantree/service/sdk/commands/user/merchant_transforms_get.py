@@ -3,6 +3,7 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import StoreType
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
@@ -18,11 +19,11 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str) -> MerchantTransformsGetResponse
+    execute(self, user_guid: str) -> set[StoreType]
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> MerchantTransformsGetResponse:
+    def execute(self, user_guid: str) -> set[StoreType]:
         """
         Executes the command.
 
@@ -33,7 +34,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_merchants: MerchantTransformsGetResponse
+        user_merchants: set[StoreType]
             The (unique) set of user merchants.
         """
 
@@ -43,4 +44,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return MerchantTransformsGetResponse.parse_obj(response)
+        merchant_transforms_get_response: MerchantTransformsGetResponse = MerchantTransformsGetResponse.parse_obj(
+            response
+        )
+        return merchant_transforms_get_response.merchants

@@ -2,6 +2,7 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import FeatureType
 
 from ... import ActiveFeatureResponse
 from ...contracts.dto.request_status_codes import RequestStatusCodes
@@ -17,11 +18,11 @@ class UserFeatureActiveGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str, details: bool) -> UserFeatureState
+    execute(self, user_guid: str, details: bool) -> FeatureType
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> ActiveFeatureResponse:
+    def execute(self, user_guid: str) -> FeatureType:
         """
         Executes the command.
 
@@ -32,8 +33,8 @@ class UserFeatureActiveGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_feature: UserFeature
-            The active UserFeature.
+        user_feature: FeatureType
+            The active FeatureType.
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -42,4 +43,5 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return ActiveFeatureResponse.parse_obj(response)
+        active_feature_response: ActiveFeatureResponse = ActiveFeatureResponse.parse_obj(response)
+        return active_feature_response.active_feature

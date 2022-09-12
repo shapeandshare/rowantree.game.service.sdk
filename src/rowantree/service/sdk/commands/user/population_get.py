@@ -18,11 +18,11 @@ class UserPopulationGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str) -> PopulationGetResponse
+    execute(self, user_guid: str) -> int
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> PopulationGetResponse:
+    def execute(self, user_guid: str) -> int:
         """
         Executes the command.
 
@@ -33,8 +33,8 @@ class UserPopulationGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_population: PopulationGetResponse
-            User population object.
+        user_population: int
+            User population size.
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -43,4 +43,5 @@ class UserPopulationGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return PopulationGetResponse.parse_obj(response)
+        population_get_response: PopulationGetResponse = PopulationGetResponse.parse_obj(response)
+        return population_get_response.population

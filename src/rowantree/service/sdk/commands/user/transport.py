@@ -1,8 +1,8 @@
 """ User Transport Command Definition """
-
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import FeatureType
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
@@ -19,11 +19,11 @@ class UserTransportCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str, request: UserTransportRequest) -> UserFeature
+    execute(self, user_guid: str, request: UserTransportRequest) -> FeatureType
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserTransportRequest) -> ActiveFeatureResponse:
+    def execute(self, user_guid: str, request: UserTransportRequest) -> FeatureType:
         """
         Executes the command.
 
@@ -36,7 +36,7 @@ class UserTransportCommand(AbstractCommand):
 
         Returns
         -------
-        user_feature: UserFeature
+        user_feature: FeatureType
             The user's new active feature.
         """
 
@@ -47,4 +47,5 @@ class UserTransportCommand(AbstractCommand):
             data=request.json(by_alias=True),
         )
         response: dict = self.wrapped_request(request=request)
-        return ActiveFeatureResponse.parse_obj(response)
+        active_feature_response: ActiveFeatureResponse = ActiveFeatureResponse.parse_obj(response)
+        return active_feature_response.active_feature

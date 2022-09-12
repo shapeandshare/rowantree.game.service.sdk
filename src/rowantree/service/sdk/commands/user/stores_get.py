@@ -3,6 +3,7 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import StoreType, UserStore
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
@@ -18,11 +19,11 @@ class UserStoresGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str) -> StoresGetResponse
+    execute(self, user_guid: str) -> dict[StoreType, UserStore]
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> StoresGetResponse:
+    def execute(self, user_guid: str) -> dict[StoreType, UserStore]:
         """
         Gets the (unique) list of user stores.
 
@@ -33,8 +34,7 @@ class UserStoresGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_stores: StoresGetResponse
-            A (unique) list of user stores.
+        user_stores: dict[StoreType, UserStore]
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -43,4 +43,5 @@ class UserStoresGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return StoresGetResponse.parse_obj(response)
+        stores_get_response: StoresGetResponse = StoresGetResponse.parse_obj(response)
+        return stores_get_response.stores
