@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel
 
+from rowantree.contracts import FeatureType
+
 
 class UserTransportRequest(BaseModel):
     """
@@ -12,8 +14,8 @@ class UserTransportRequest(BaseModel):
 
     Attributes
     ----------
-    location: str
+    location: FeatureType
         The name of the feature (location).
     """
 
-    location: str
+    location: FeatureType

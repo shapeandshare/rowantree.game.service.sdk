@@ -3,6 +3,7 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
+from rowantree.contracts import StoreType, UserIncome
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
@@ -18,11 +19,11 @@ class UserIncomeGetCommand(AbstractCommand):
 
     Methods
     -------
-    execute(self, user_guid: str) -> UserIncomeGetResponse
+    execute(self, user_guid: str) -> dict[StoreType, UserIncome]
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserIncomeGetResponse:
+    def execute(self, user_guid: str) -> dict[StoreType, UserIncome]:
         """
         Executes the command.
 
@@ -33,8 +34,7 @@ class UserIncomeGetCommand(AbstractCommand):
 
         Returns
         -------
-        user_incomes: UserIncomeGetResponse
-            A (unique) list of user incomes.
+        user_incomes: dict[StoreType, UserIncome]
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -43,4 +43,5 @@ class UserIncomeGetCommand(AbstractCommand):
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
-        return UserIncomeGetResponse.parse_obj(response)
+        user_income_get_response: UserIncomeGetResponse = UserIncomeGetResponse.parse_obj(response)
+        return user_income_get_response.incomes

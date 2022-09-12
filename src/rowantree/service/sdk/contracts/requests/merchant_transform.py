@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel
 
+from rowantree.contracts import StoreType
+
 
 class MerchantTransformRequest(BaseModel):
     """
@@ -9,8 +11,8 @@ class MerchantTransformRequest(BaseModel):
 
     Attributes
     ----------
-    store_name: str
+    store_name: StoreType
         The name of the store to transform.
     """
 
-    store_name: str
+    store_name: StoreType

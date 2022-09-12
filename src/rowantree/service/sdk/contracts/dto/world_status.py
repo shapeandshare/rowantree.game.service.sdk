@@ -1,10 +1,10 @@
-"""" WorldStatusGetResponse Definition """
+"""" WorldStatus Definition """
 from pydantic import BaseModel
 
 
-class WorldStatusGetResponse(BaseModel):
+class WorldStatus(BaseModel):
     """
-    WorldStatusGetResponse DTO
+    WorldStatus DTO
     Defines the status of the game world.
 
     Attributes
