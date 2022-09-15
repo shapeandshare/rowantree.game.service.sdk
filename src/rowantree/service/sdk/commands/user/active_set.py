@@ -22,14 +22,12 @@ class UserActiveSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserActiveGetStatus) -> UserActiveGetStatus:
+    def execute(self, request: UserActiveGetStatus) -> UserActiveGetStatus:
         """
         Executes the command.
 
         Parameters
         ----------
-        user_guid: str
-            The user guid to target.
         request: UserActiveGetStatus
             The active state to set the user to.
 
@@ -41,8 +39,8 @@ class UserActiveSetCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/active",
-            data=request.json(by_alias=True, exclude={"state"}),
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{request.user_guid}/active",
+            data={"active": request.active},
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

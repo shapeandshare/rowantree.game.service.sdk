@@ -12,4 +12,5 @@ class MerchantTransformRequest(BaseModel):
         The name of the store to transform.
     """
 
+    user_guid: str
     store_name: StoreType

@@ -22,14 +22,12 @@ class UserTransportCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserTransportRequest) -> UserFeatureState:
+    def execute(self, request: UserTransportRequest) -> UserFeatureState:
         """
         Executes the command.
 
         Parameters
         ----------
-        user_guid: str
-            The target user guid.
         request: UserTransportRequest
             The UserTransportRequest to perform.
 
@@ -41,9 +39,9 @@ class UserTransportCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/transport",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{request.user_guid}/transport",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
-            data=request.json(by_alias=True),
+            data=request.json(by_alias=True, exclude={"user_guid"}),
         )
         response: dict = self.wrapped_request(request=request)
         return UserFeatureState.parse_obj(response)

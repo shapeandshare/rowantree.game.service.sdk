@@ -3,16 +3,7 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 
-from rowantree.contracts import (
-    ActionQueue,
-    FeatureType,
-    StoreType,
-    User,
-    UserFeatureState,
-    UserIncome,
-    UserState,
-    UserStore,
-)
+from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserFeatureState, UserState, UserStore
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand
@@ -126,8 +117,8 @@ class RowanTreeService:
             The state of the user.
         """
 
-        request: UserActiveGetStatus = UserActiveGetStatus(active=active)
-        return self.user_active_set_command.execute(user_guid=user_guid, request=request)
+        request: UserActiveGetStatus = UserActiveGetStatus(user_guid=user_guid, active=active)
+        return self.user_active_set_command.execute(request=request)
 
     def user_create(self, user_guid: str) -> User:
         """
@@ -192,7 +183,7 @@ class RowanTreeService:
 
         return self.user_features_get_command.execute(user_guid=user_guid)
 
-    def user_income_get(self, user_guid: str) -> dict[StoreType, UserIncome]:
+    def user_income_get(self, user_guid: str) -> dict[StoreType, UserStore]:
         """
         Gets (unique) list of user incomes.
 
@@ -203,7 +194,7 @@ class RowanTreeService:
 
         Returns
         -------
-        user_income: dict[StoreType, UserIncome]
+        user_income: dict[StoreType, UserStore]
         """
 
         return self.user_income_get_command.execute(user_guid=user_guid)
@@ -222,8 +213,10 @@ class RowanTreeService:
             The amount to set the income type to (absolute).
         """
 
-        request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
-        self.user_income_set_command.execute(user_guid=user_guid, request=request)
+        request: UserIncomeSetRequest = UserIncomeSetRequest(
+            user_guid=user_guid, income_source_name=income_source_name, amount=amount
+        )
+        self.user_income_set_command.execute(request=request)
 
     def user_merchant_transforms_get(self, user_guid: str) -> set[StoreType]:
         """
@@ -310,8 +303,8 @@ class RowanTreeService:
             The user's new active UserFeatureState.
         """
 
-        request: UserTransportRequest = UserTransportRequest(location=location)
-        return self.user_transport_command.execute(user_guid=user_guid, request=request)
+        request: UserTransportRequest = UserTransportRequest(user_guid=user_guid, location=location)
+        return self.user_transport_command.execute(request=request)
 
     # Merchant Commands
 
@@ -327,8 +320,8 @@ class RowanTreeService:
             The store name to perform the merchant transform on.
         """
 
-        request: MerchantTransformRequest = MerchantTransformRequest(store_name=store_name)
-        self.merchant_transform_perform_command.execute(user_guid=user_guid, request=request)
+        request: MerchantTransformRequest = MerchantTransformRequest(user_guid=user_guid, store_name=store_name)
+        self.merchant_transform_perform_command.execute(request=request)
 
     # Admin Commands
 

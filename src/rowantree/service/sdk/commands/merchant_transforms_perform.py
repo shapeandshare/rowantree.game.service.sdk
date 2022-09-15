@@ -22,22 +22,20 @@ class MerchantTransformPerformCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: MerchantTransformRequest) -> None:
+    def execute(self, request: MerchantTransformRequest) -> None:
         """
         Executes the command.
 
         Parameters
         ----------
-        user_guid: str
-            The target user guid.
         request: MerchantTransformRequest
             The merchant transform request.
         """
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/merchant",
+            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{request.user_guid}/merchant",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
-            data=request.json(by_alias=True),
+            data=request.json(by_alias=True, exclude={"user_guid"}),
         )
         self.wrapped_request(request=request)
