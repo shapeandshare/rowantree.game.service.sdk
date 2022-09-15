@@ -1,7 +1,6 @@
 """ StoresGetResponse Definition """
 
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import StoreType, UserStore
+from rowantree.contracts import BaseModel, StoreType, UserStore
 
 
 class StoresGetResponse(BaseModel):

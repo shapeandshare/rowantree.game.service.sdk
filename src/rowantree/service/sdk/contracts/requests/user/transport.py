@@ -1,7 +1,6 @@
 """ User Transport Request Definition """
 
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import FeatureType
+from rowantree.contracts import BaseModel, FeatureType
 
 
 class UserTransportRequest(BaseModel):

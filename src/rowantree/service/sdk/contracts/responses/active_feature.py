@@ -1,7 +1,6 @@
 """ Active Feature Response Definition """
 
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import FeatureType
+from rowantree.contracts import BaseModel, FeatureType
 
 
 class ActiveFeatureResponse(BaseModel):

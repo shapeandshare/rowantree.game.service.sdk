@@ -1,6 +1,5 @@
 """ FeaturesGetResponse Definition """
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import FeatureType
+from rowantree.contracts import BaseModel, FeatureType
 
 
 class FeaturesGetResponse(BaseModel):

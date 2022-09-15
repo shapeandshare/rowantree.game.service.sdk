@@ -1,6 +1,5 @@
 """ Merchant Transform Request Definition """
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import StoreType
+from rowantree.contracts import BaseModel, StoreType
 
 
 class MerchantTransformRequest(BaseModel):
