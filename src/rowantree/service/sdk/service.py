@@ -3,7 +3,8 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 
-from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserIncome, UserState, UserStore
+from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserIncome, UserState, UserStore, \
+    UserFeatureState
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand
@@ -284,7 +285,7 @@ class RowanTreeService:
 
         return self.user_stores_get_command.execute(user_guid=user_guid)
 
-    def user_transport(self, user_guid: str, location: FeatureType) -> FeatureType:
+    def user_transport(self, user_guid: str, location: FeatureType) -> UserFeatureState:
         """
         Performs a user transport. (feature to feature change)
 
@@ -297,8 +298,8 @@ class RowanTreeService:
 
         Returns
         -------
-        user_feature: FeatureType
-            The user's new active FeatureType.
+        feature_state: UserFeatureState
+            The user's new active UserFeatureState.
         """
 
         request: UserTransportRequest = UserTransportRequest(location=location)

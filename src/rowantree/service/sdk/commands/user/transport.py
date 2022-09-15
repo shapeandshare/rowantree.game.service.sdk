@@ -2,7 +2,7 @@
 from starlette import status
 
 from rowantree.common.sdk import demand_env_var
-from rowantree.contracts import FeatureType
+from rowantree.contracts import FeatureType, UserFeatureState
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
@@ -23,7 +23,7 @@ class UserTransportCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserTransportRequest) -> FeatureType:
+    def execute(self, user_guid: str, request: UserTransportRequest) -> UserFeatureState:
         """
         Executes the command.
 
@@ -36,8 +36,8 @@ class UserTransportCommand(AbstractCommand):
 
         Returns
         -------
-        user_feature: FeatureType
-            The user's new active feature.
+        feature_state: UserFeatureState
+            The user's new active feature state.
         """
 
         request: WrappedRequest = WrappedRequest(
@@ -48,4 +48,4 @@ class UserTransportCommand(AbstractCommand):
         )
         response: dict = self.wrapped_request(request=request)
         active_feature_response: ActiveFeatureResponse = ActiveFeatureResponse.parse_obj(response)
-        return active_feature_response.active_feature
+        return active_feature_response.feature_state
