@@ -1,6 +1,6 @@
 """ Active Feature Response Definition """
 
-from rowantree.contracts import BaseModel, FeatureType
+from rowantree.contracts import BaseModel, UserFeatureState
 
 
 class ActiveFeatureResponse(BaseModel):
@@ -9,8 +9,8 @@ class ActiveFeatureResponse(BaseModel):
 
     Attributes
     ----------
-    active_feature: FeatureType
-        The current active feature of the user.
+    feature_state: UserFeatureState
+        The current active feature details of the user.
     """
 
-    active_feature: FeatureType
+    feature_state: UserFeatureState
