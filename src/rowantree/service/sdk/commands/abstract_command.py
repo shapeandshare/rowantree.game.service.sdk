@@ -6,11 +6,10 @@ from abc import abstractmethod
 from typing import Any, Optional
 
 import requests
-from pydantic import BaseModel
 from requests import Response
 
 from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest, Token
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import BaseModel, demand_env_var, demand_env_var_as_float
 
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.exceeded_retry_count_error import ExceededRetryCountError
@@ -34,11 +33,6 @@ class AbstractCommand(BaseModel):
     sleep_time: float = 1
     retry_count: int = 5
     authenticate_user_command: AuthenticateUserCommand = AuthenticateUserCommand()
-
-    class Config:
-        """Pydantic Config Over-ride"""
-
-        arbitrary_types_allowed = True
 
     def __init__(self, **data: Any):
         super().__init__(**data)

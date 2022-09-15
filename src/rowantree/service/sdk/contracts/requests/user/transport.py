@@ -1,7 +1,6 @@
 """ User Transport Request Definition """
 
-from pydantic import BaseModel
-
+from rowantree.common.sdk import BaseModel
 from rowantree.contracts import FeatureType
 
 

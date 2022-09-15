@@ -1,5 +1,5 @@
 """ User Active Definition """
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class UserActiveGetStatus(BaseModel):
