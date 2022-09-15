@@ -3,8 +3,16 @@ The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
 
-from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserIncome, UserState, UserStore, \
-    UserFeatureState
+from rowantree.contracts import (
+    ActionQueue,
+    FeatureType,
+    StoreType,
+    User,
+    UserFeatureState,
+    UserIncome,
+    UserState,
+    UserStore,
+)
 
 from .commands.action_queue_process import ActionQueueProcessCommand
 from .commands.health_get import HealthGetCommand
@@ -150,7 +158,7 @@ class RowanTreeService:
 
         self.user_delete_command.execute(user_guid=user_guid)
 
-    def user_feature_active_get(self, user_guid: str) -> FeatureType:
+    def user_feature_active_get(self, user_guid: str) -> UserFeatureState:
         """
         Gets the active user feature.
 
@@ -161,8 +169,8 @@ class RowanTreeService:
 
         Returns
         -------
-        user_feature: FeatureType
-            The Feature Type.
+        user_feature: UserFeatureState
+            The UserFeatureState.
         """
 
         return self.user_feature_active_get_command.execute(user_guid=user_guid)
