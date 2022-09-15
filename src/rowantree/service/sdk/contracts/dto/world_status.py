@@ -1,5 +1,5 @@
 """" WorldStatus Definition """
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class WorldStatus(BaseModel):

@@ -1,6 +1,5 @@
 """ Request Status Codes Definition """
-
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class RequestStatusCodes(BaseModel):

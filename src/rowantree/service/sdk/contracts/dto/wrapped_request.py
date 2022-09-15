@@ -2,7 +2,7 @@
 
 from typing import Any, Optional
 
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 from ...contracts.request_verb import RequestVerb
 from .request_status_codes import RequestStatusCodes
