@@ -1,5 +1,4 @@
 """ User Transport Request Definition """
-
 from rowantree.contracts import BaseModel, FeatureType
 
 
@@ -16,4 +15,5 @@ class UserTransportRequest(BaseModel):
         The name of the feature (location).
     """
 
+    user_guid: str
     location: FeatureType
