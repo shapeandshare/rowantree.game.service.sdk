@@ -2,7 +2,7 @@
 
 from typing import Any, Optional
 
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 from ...contracts.request_verb import RequestVerb
 from .request_status_codes import RequestStatusCodes

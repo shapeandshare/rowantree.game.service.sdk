@@ -1,5 +1,5 @@
 """ Request Status Codes Definition """
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 
 class RequestStatusCodes(BaseModel):

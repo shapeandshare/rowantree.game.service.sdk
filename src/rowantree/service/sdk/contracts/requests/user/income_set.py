@@ -1,6 +1,5 @@
 """ User Income Set Request Definition """
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import StoreType
+from rowantree.contracts import BaseModel, StoreType
 
 
 class UserIncomeSetRequest(BaseModel):

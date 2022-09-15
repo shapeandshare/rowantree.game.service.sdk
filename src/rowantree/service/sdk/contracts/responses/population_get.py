@@ -1,6 +1,6 @@
 """ PopulationGetResponse Definition """
 
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 
 class PopulationGetResponse(BaseModel):

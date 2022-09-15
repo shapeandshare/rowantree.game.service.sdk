@@ -1,7 +1,6 @@
 """ UserIncomeGetResponse Definition """
 
-from rowantree.common.sdk import BaseModel
-from rowantree.contracts import StoreType, UserIncome
+from rowantree.contracts import BaseModel, StoreType, UserIncome
 
 
 class UserIncomeGetResponse(BaseModel):
