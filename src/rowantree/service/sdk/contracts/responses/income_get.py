@@ -1,6 +1,6 @@
 """ UserIncomeGetResponse Definition """
 
-from rowantree.contracts import BaseModel, StoreType, UserStore
+from rowantree.contracts import BaseModel, IncomeSourceType, UserIncome
 
 
 class UserIncomeGetResponse(BaseModel):
@@ -9,4 +9,4 @@ class UserIncomeGetResponse(BaseModel):
     A dictionary of user incomes, keyed by income name.
     """
 
-    incomes: dict[StoreType, UserStore]
+    incomes: dict[IncomeSourceType, UserIncome]
