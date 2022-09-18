@@ -13,5 +13,4 @@ class UserActiveGetStatus(BaseModel):
         The user active state.
     """
 
-    user_guid: str
     active: bool
