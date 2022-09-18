@@ -14,6 +14,5 @@ class UserIncomeSetRequest(BaseModel):
         The amount to set for the specified type. (As an absolute)
     """
 
-    user_guid: str
     income_source_name: IncomeSourceType
     amount: int

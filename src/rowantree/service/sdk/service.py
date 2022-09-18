@@ -117,8 +117,8 @@ class RowanTreeService:
             The state of the user.
         """
 
-        request: UserActiveGetStatus = UserActiveGetStatus(user_guid=user_guid, active=active)
-        return self.user_active_set_command.execute(request=request)
+        request: UserActiveGetStatus = UserActiveGetStatus(active=active)
+        return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
     def user_create(self, user_guid: str) -> User:
         """
@@ -213,10 +213,8 @@ class RowanTreeService:
             The amount to set the income type to (absolute).
         """
 
-        request: UserIncomeSetRequest = UserIncomeSetRequest(
-            user_guid=user_guid, income_source_name=income_source_name, amount=amount
-        )
-        self.user_income_set_command.execute(request=request)
+        request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
+        self.user_income_set_command.execute(user_guid=user_guid, request=request)
 
     def user_merchant_transforms_get(self, user_guid: str) -> set[StoreType]:
         """
@@ -303,8 +301,8 @@ class RowanTreeService:
             The user's new active UserFeatureState.
         """
 
-        request: UserTransportRequest = UserTransportRequest(user_guid=user_guid, location=location)
-        return self.user_transport_command.execute(request=request)
+        request: UserTransportRequest = UserTransportRequest(location=location)
+        return self.user_transport_command.execute(user_guid=user_guid, request=request)
 
     # Merchant Commands
 
@@ -320,8 +318,8 @@ class RowanTreeService:
             The store name to perform the merchant transform on.
         """
 
-        request: MerchantTransformRequest = MerchantTransformRequest(user_guid=user_guid, store_name=store_name)
-        self.merchant_transform_perform_command.execute(request=request)
+        request: MerchantTransformRequest = MerchantTransformRequest(store_name=store_name)
+        self.merchant_transform_perform_command.execute(user_guid=user_guid, request=request)
 
     # Admin Commands
 

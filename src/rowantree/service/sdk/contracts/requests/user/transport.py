@@ -15,5 +15,4 @@ class UserTransportRequest(BaseModel):
         The name of the feature (location).
     """
 
-    user_guid: str
     location: FeatureType
