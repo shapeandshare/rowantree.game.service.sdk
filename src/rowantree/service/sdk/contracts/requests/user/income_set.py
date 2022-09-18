@@ -1,5 +1,5 @@
 """ User Income Set Request Definition """
-from rowantree.contracts import BaseModel, StoreType
+from rowantree.contracts import BaseModel, IncomeSourceType
 
 
 class UserIncomeSetRequest(BaseModel):
@@ -8,12 +8,12 @@ class UserIncomeSetRequest(BaseModel):
 
     Attributes
     ----------
-    income_source_name: StoreType
+    income_source_name: IncomeSourceType
         The income source name (worker type)
     amount: int
         The amount to set for the specified type. (As an absolute)
     """
 
     user_guid: str
-    income_source_name: StoreType
+    income_source_name: IncomeSourceType
     amount: int
