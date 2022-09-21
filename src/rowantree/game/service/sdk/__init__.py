@@ -1,4 +1,4 @@
-""" rowantree.service.sdk namespace """
+""" rowantree.game.service.sdk namespace """
 
 from .contracts.dto.world_status import WorldStatus
 from .contracts.requests.merchant_transform import MerchantTransformRequest
