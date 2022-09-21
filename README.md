@@ -1,4 +1,4 @@
-# The Rowan Tree Service SDK
+# The Rowan Tree Game Service SDK
 Contains the Python SDK for interacting with The Rowan Tree Service (Layer).
 
 ## Installation
@@ -8,7 +8,7 @@ The latest version be using pip:
 ## Usage
 Example
 ```python
-from rowantree.service.sdk import RowanTreeService
+from rowantree.game.service.sdk import RowanTreeService
 
 rowantree_service: RowanTreeService = RowanTreeService()
 
