@@ -2,8 +2,6 @@
 
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
-
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
 from ...contracts.request_verb import RequestVerb
@@ -33,7 +31,7 @@ class UserDeleteCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.DELETE,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}",
+            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         self.wrapped_request(request=request)
