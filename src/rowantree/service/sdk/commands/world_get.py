@@ -2,8 +2,6 @@
 
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
-
 from ..contracts.dto.request_status_codes import RequestStatusCodes
 from ..contracts.dto.world_status import WorldStatus
 from ..contracts.dto.wrapped_request import WrappedRequest
@@ -34,7 +32,7 @@ class WorldStatusGetCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/world",
+            url=f"https://api.{self.options.tld}/game/v1/world",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

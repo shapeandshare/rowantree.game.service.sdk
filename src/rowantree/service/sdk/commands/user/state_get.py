@@ -2,7 +2,6 @@
 
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserState
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
@@ -39,7 +38,7 @@ class UserStateGetCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/state",
+            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/state",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

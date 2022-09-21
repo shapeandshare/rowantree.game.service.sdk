@@ -1,7 +1,6 @@
 """ User Transport Command Definition """
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import UserFeatureState
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
@@ -40,7 +39,7 @@ class UserTransportCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/user/{user_guid}/transport",
+            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/transport",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.json(by_alias=True),
         )

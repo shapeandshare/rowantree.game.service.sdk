@@ -2,7 +2,6 @@
 
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
 from rowantree.contracts import ActionQueue
 
 from ..contracts.dto.request_status_codes import RequestStatusCodes
@@ -34,7 +33,7 @@ class ActionQueueProcessCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ROWANTREE_SERVICE_ENDPOINT')}/v1/world/queue",
+            url=f"https://api.{self.options.tld}/game/v1/world/queue",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.json(by_alias=True),
         )
