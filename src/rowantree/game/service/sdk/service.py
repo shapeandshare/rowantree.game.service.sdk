@@ -65,40 +65,34 @@ class RowanTreeService:
     world_status_get_command: WorldStatusGetCommand
 
     def __init__(self, options: Optional[CommandOptions] = None):
-        if options is None:
-            options: CommandOptions = CommandOptions(
-                sleep_time=demand_env_var_as_float(name="ROWANTREE_SERVICE_SLEEP_TIME"),
-                retry_count=demand_env_var_as_int(name="ROWANTREE_SERVICE_RETRY_COUNT"),
-                tld=demand_env_var(name="ROWANTREE_TLD"),
-                timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
-            )
-        auth_options: AuthCommandOptions = AuthCommandOptions.parse_obj(options.dict(by_alias=True))
+        command_dict: dict = {}
+        if options:
+            auth_options: AuthCommandOptions = AuthCommandOptions.parse_obj(options.dict(by_alias=True))
+            command_dict["options"] = options
+            command_dict["authenticate_user_command"] = AuthenticateUserCommand(options=auth_options)
 
-        authenticate_user_command = AuthenticateUserCommand(options=auth_options)
+        self.user_active_get_command = UserActiveGetCommand.parse_obj(command_dict)
+        self.user_active_set_command = UserActiveSetCommand.parse_obj(command_dict)
 
-        command_parameters: dict = {"authenticate_user_command": authenticate_user_command, "options": options}
-        self.user_active_get_command = UserActiveGetCommand(**command_parameters)
-        self.user_active_set_command = UserActiveSetCommand(**command_parameters)
+        self.user_create_command = UserCreateCommand.parse_obj(command_dict)
+        self.user_delete_command = UserDeleteCommand.parse_obj(command_dict)
 
-        self.user_create_command = UserCreateCommand(**command_parameters)
-        self.user_delete_command = UserDeleteCommand(**command_parameters)
+        self.user_feature_active_get_command = UserFeatureActiveGetCommand.parse_obj(command_dict)
+        self.user_features_get_command = UserFeaturesGetCommand.parse_obj(command_dict)
 
-        self.user_feature_active_get_command = UserFeatureActiveGetCommand(**command_parameters)
-        self.user_features_get_command = UserFeaturesGetCommand(**command_parameters)
+        self.user_income_get_command = UserIncomeGetCommand.parse_obj(command_dict)
+        self.user_income_set_command = UserIncomeSetCommand.parse_obj(command_dict)
 
-        self.user_income_get_command = UserIncomeGetCommand(**command_parameters)
-        self.user_income_set_command = UserIncomeSetCommand(**command_parameters)
+        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand.parse_obj(command_dict)
+        self.user_population_get_command = UserPopulationGetCommand.parse_obj(command_dict)
+        self.user_state_get_command = UserStateGetCommand.parse_obj(command_dict)
+        self.user_stores_get_command = UserStoresGetCommand.parse_obj(command_dict)
+        self.user_transport_command = UserTransportCommand.parse_obj(command_dict)
 
-        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand(**command_parameters)
-        self.user_population_get_command = UserPopulationGetCommand(**command_parameters)
-        self.user_state_get_command = UserStateGetCommand(**command_parameters)
-        self.user_stores_get_command = UserStoresGetCommand(**command_parameters)
-        self.user_transport_command = UserTransportCommand(**command_parameters)
-
-        self.merchant_transform_perform_command = MerchantTransformPerformCommand(**command_parameters)
-        self.health_get_command = HealthGetCommand(**command_parameters)
-        self.action_queue_process_command = ActionQueueProcessCommand(**command_parameters)
-        self.world_status_get_command = WorldStatusGetCommand(**command_parameters)
+        self.merchant_transform_perform_command = MerchantTransformPerformCommand.parse_obj(command_dict)
+        self.health_get_command = HealthGetCommand.parse_obj(command_dict)
+        self.action_queue_process_command = ActionQueueProcessCommand.parse_obj(command_dict)
+        self.world_status_get_command = WorldStatusGetCommand.parse_obj(command_dict)
 
     def user_active_get(self, user_guid: str) -> UserActiveGetStatus:
         """
