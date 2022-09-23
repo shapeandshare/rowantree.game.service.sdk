@@ -2,8 +2,11 @@
 The Rowan Tree Service Layer Interface
 This should be used as the primary entry point for interactions.
 """
+from typing import Optional
+
 from rowantree.auth.sdk import AuthenticateUserCommand
 from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserFeatureState, UserState, UserStore
 
 from .commands.action_queue_process import ActionQueueProcessCommand
@@ -38,10 +41,6 @@ class RowanTreeService:
     Provides an interface for access the service layer.
     """
 
-    auth_options: AuthCommandOptions
-    authenticate_user_command: AuthenticateUserCommand
-    options: CommandOptions
-
     user_active_get_command: UserActiveGetCommand
     user_active_set_command: UserActiveSetCommand
 
@@ -65,33 +64,35 @@ class RowanTreeService:
     health_get_command: HealthGetCommand
     world_status_get_command: WorldStatusGetCommand
 
-    def __init__(self, auth_options: AuthCommandOptions, options: CommandOptions):
-        self.authenticate_user_command = AuthenticateUserCommand(options=auth_options)
+    def __init__(self, options: Optional[CommandOptions] = None):
+        command_dict: dict = {}
+        if options:
+            auth_options: AuthCommandOptions = AuthCommandOptions.parse_obj(options.dict(by_alias=True))
+            command_dict["options"] = options
+            command_dict["authenticate_user_command"] = AuthenticateUserCommand(options=auth_options)
 
-        command_options: dict = {"authenticate_user_command": self.authenticate_user_command, "options": options}
+        self.user_active_get_command = UserActiveGetCommand.parse_obj(command_dict)
+        self.user_active_set_command = UserActiveSetCommand.parse_obj(command_dict)
 
-        self.user_active_get_command = UserActiveGetCommand(**command_options)
-        self.user_active_set_command = UserActiveSetCommand(**command_options)
+        self.user_create_command = UserCreateCommand.parse_obj(command_dict)
+        self.user_delete_command = UserDeleteCommand.parse_obj(command_dict)
 
-        self.user_create_command = UserCreateCommand(**command_options)
-        self.user_delete_command = UserDeleteCommand(**command_options)
+        self.user_feature_active_get_command = UserFeatureActiveGetCommand.parse_obj(command_dict)
+        self.user_features_get_command = UserFeaturesGetCommand.parse_obj(command_dict)
 
-        self.user_feature_active_get_command = UserFeatureActiveGetCommand(**command_options)
-        self.user_features_get_command = UserFeaturesGetCommand(**command_options)
+        self.user_income_get_command = UserIncomeGetCommand.parse_obj(command_dict)
+        self.user_income_set_command = UserIncomeSetCommand.parse_obj(command_dict)
 
-        self.user_income_get_command = UserIncomeGetCommand(**command_options)
-        self.user_income_set_command = UserIncomeSetCommand(**command_options)
+        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand.parse_obj(command_dict)
+        self.user_population_get_command = UserPopulationGetCommand.parse_obj(command_dict)
+        self.user_state_get_command = UserStateGetCommand.parse_obj(command_dict)
+        self.user_stores_get_command = UserStoresGetCommand.parse_obj(command_dict)
+        self.user_transport_command = UserTransportCommand.parse_obj(command_dict)
 
-        self.user_merchant_transforms_get_command = UserMerchantTransformsGetCommand(**command_options)
-        self.user_population_get_command = UserPopulationGetCommand(**command_options)
-        self.user_state_get_command = UserStateGetCommand(**command_options)
-        self.user_stores_get_command = UserStoresGetCommand(**command_options)
-        self.user_transport_command = UserTransportCommand(**command_options)
-
-        self.merchant_transform_perform_command = MerchantTransformPerformCommand(**command_options)
-        self.health_get_command = HealthGetCommand(**command_options)
-        self.action_queue_process_command = ActionQueueProcessCommand(**command_options)
-        self.world_status_get_command = WorldStatusGetCommand(**command_options)
+        self.merchant_transform_perform_command = MerchantTransformPerformCommand.parse_obj(command_dict)
+        self.health_get_command = HealthGetCommand.parse_obj(command_dict)
+        self.action_queue_process_command = ActionQueueProcessCommand.parse_obj(command_dict)
+        self.world_status_get_command = WorldStatusGetCommand.parse_obj(command_dict)
 
     def user_active_get(self, user_guid: str) -> UserActiveGetStatus:
         """

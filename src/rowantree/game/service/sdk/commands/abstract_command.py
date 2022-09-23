@@ -11,6 +11,7 @@ from requests import Response
 from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest, Token
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import BaseModel
+from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
 
 from ..contracts.dto.command_options import CommandOptions
 from ..contracts.dto.wrapped_request import WrappedRequest
@@ -27,24 +28,27 @@ class AbstractCommand(BaseModel):
     Abstract Command
     """
 
-    authenticate_user_command: AuthenticateUserCommand
-    options: CommandOptions
+    authenticate_user_command: Optional[AuthenticateUserCommand]
+    options: Optional[CommandOptions]
 
-    def __init__(
-        self, authenticate_user_command: AuthenticateUserCommand, options: Optional[CommandOptions], **data: Any
-    ):
-        super().__init__(**data)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-        self.authenticate_user_command = authenticate_user_command
-        if options:
-            self.options = options
-        else:
-            self.options = CommandOptions(
+        if self.options is None:
+            self.options: CommandOptions = CommandOptions(
                 sleep_time=demand_env_var_as_float(name="ROWANTREE_SERVICE_SLEEP_TIME"),
                 retry_count=demand_env_var_as_int(name="ROWANTREE_SERVICE_RETRY_COUNT"),
                 tld=demand_env_var(name="ROWANTREE_TLD"),
                 timeout=demand_env_var_as_float(name="ROWANTREE_SERVICE_TIMEOUT"),
             )
+        if self.authenticate_user_command is None:
+            auth_options: AuthCommandOptions = AuthCommandOptions(
+                sleep_time=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_SLEEP_TIME"),
+                retry_count=demand_env_var_as_int(name="ACCESS_AUTH_ENDPOINT_RETRY_COUNT"),
+                tld=demand_env_var(name="ROWANTREE_TLD"),
+                timeout=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_TIMEOUT"),
+            )
+            self.authenticate_user_command = AuthenticateUserCommand(options=auth_options)
 
         # If we are the first to need the singleton, then create it.
         if "Authorization" not in ROWANTREE_SERVICE_SDK_HEADERS:
