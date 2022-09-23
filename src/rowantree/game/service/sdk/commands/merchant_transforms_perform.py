@@ -35,6 +35,6 @@ class MerchantTransformPerformCommand(AbstractCommand):
             verb=RequestVerb.POST,
             url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/merchant",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
-            data=request.json(by_alias=True),
+            data=request.dict(by_alias=True),
         )
         self.wrapped_request(request=request)

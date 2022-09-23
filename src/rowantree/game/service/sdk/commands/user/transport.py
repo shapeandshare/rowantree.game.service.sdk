@@ -41,7 +41,7 @@ class UserTransportCommand(AbstractCommand):
             verb=RequestVerb.POST,
             url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/transport",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
-            data=request.json(by_alias=True),
+            data=request.dict(by_alias=True),
         )
         response: dict = self.wrapped_request(request=request)
         return UserFeatureState.parse_obj(response)
