@@ -1,4 +1,6 @@
 """ User Transport Command Definition """
+from typing import Optional
+
 from starlette import status
 
 from rowantree.contracts import UserFeatureState
@@ -21,7 +23,7 @@ class UserTransportCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserTransportRequest) -> UserFeatureState:
+    def execute(self, request: UserTransportRequest, user_guid: Optional[str]) -> UserFeatureState:
         """
         Executes the command.
 
@@ -37,9 +39,11 @@ class UserTransportCommand(AbstractCommand):
             The user's new active feature state.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/transport",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/transport",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.dict(by_alias=True),
         )

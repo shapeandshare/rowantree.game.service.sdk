@@ -10,7 +10,7 @@ from requests import Response
 
 from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest
 from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
-from rowantree.auth.sdk import Token
+from rowantree.auth.sdk import Token, TokenClaims, get_claims
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import BaseModel
 
@@ -31,6 +31,10 @@ class AbstractCommand(BaseModel):
 
     authenticate_user_command: Optional[AuthenticateUserCommand]
     options: Optional[CommandOptions]
+
+    guid: Optional[str] = None
+    admin: Optional[bool] = None
+    disabled: Optional[bool] = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -72,6 +76,10 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
+        claims: TokenClaims = get_claims(auth_token.access_token)
+        self.guid = claims.sub
+        self.admin = claims.admin
+        self.disabled = claims.disabled
         ROWANTREE_SERVICE_SDK_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
 
     def _build_requests_params(self, request: WrappedRequest) -> dict:
@@ -173,3 +181,10 @@ class AbstractCommand(BaseModel):
         """
 
         return self._api_caller(request=request, depth=self.options.retry_count)
+
+    def demand_user_guid(self, user_guid: Optional[str]) -> str:
+        if user_guid is None:
+            user_guid = self.guid
+        if user_guid is None:
+            raise RequestFailureError("Unable to determine command target")
+        return user_guid

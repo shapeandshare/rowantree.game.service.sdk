@@ -1,4 +1,6 @@
 """ User Feature Active Get Command """
+from typing import Optional
+
 from starlette import status
 
 from rowantree.contracts import UserFeatureState
@@ -20,7 +22,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserFeatureState:
+    def execute(self, user_guid: Optional[str]) -> UserFeatureState:
         """
         Executes the command.
 
@@ -35,9 +37,11 @@ class UserFeatureActiveGetCommand(AbstractCommand):
             The active UserFeatureState.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/features/active",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/features/active",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

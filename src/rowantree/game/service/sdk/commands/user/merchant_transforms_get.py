@@ -1,4 +1,5 @@
 """ User Merchant Transforms Get Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -22,7 +23,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> set[StoreType]:
+    def execute(self, user_guid: Optional[str]) -> set[StoreType]:
         """
         Executes the command.
 
@@ -37,9 +38,11 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
             The (unique) set of user merchants.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/merchant",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/merchant",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

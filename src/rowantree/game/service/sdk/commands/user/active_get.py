@@ -1,9 +1,11 @@
 """ UserActiveGet Command Definition """
+from typing import Optional
 
 from starlette import status
 
 from ...contracts.dto.request_status_codes import RequestStatusCodes
 from ...contracts.dto.wrapped_request import WrappedRequest
+from ...contracts.request_failure_error import RequestFailureError
 from ...contracts.request_verb import RequestVerb
 from ...contracts.user_active_status import UserActiveGetStatus
 from ..abstract_command import AbstractCommand
@@ -20,7 +22,7 @@ class UserActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserActiveGetStatus:
+    def execute(self, user_guid: Optional[str]) -> UserActiveGetStatus:
         """
         Executes the command.
 
@@ -35,9 +37,11 @@ class UserActiveGetCommand(AbstractCommand):
             The user active state object.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/active",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/active",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

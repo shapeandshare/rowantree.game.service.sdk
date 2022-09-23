@@ -1,4 +1,5 @@
 """ User Stores Get Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -22,7 +23,7 @@ class UserStoresGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> dict[StoreType, UserStore]:
+    def execute(self, user_guid: Optional[str]) -> dict[StoreType, UserStore]:
         """
         Gets the (unique) list of user stores.
 
@@ -36,9 +37,11 @@ class UserStoresGetCommand(AbstractCommand):
         user_stores: dict[StoreType, UserStore]
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/stores",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/stores",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)
