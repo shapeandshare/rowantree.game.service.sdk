@@ -8,10 +8,11 @@ from typing import Any, Optional
 import requests
 from requests import Response
 
-from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest, Token
+from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest
+from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
+from rowantree.auth.sdk import Token
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import BaseModel
-from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
 
 from ..contracts.dto.command_options import CommandOptions
 from ..contracts.dto.wrapped_request import WrappedRequest
