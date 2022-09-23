@@ -28,17 +28,13 @@ class AbstractCommand(BaseModel):
     """
 
     authenticate_user_command: AuthenticateUserCommand
-    options: CommandOptions
+    options: Optional[CommandOptions]
 
-    def __init__(
-        self, authenticate_user_command: AuthenticateUserCommand, options: Optional[CommandOptions], **data: Any
-    ):
-        super().__init__(**data)
+    def __init__(self, authenticate_user_command: AuthenticateUserCommand, **kwargs):
+        super().__init__(**kwargs)
 
         self.authenticate_user_command = authenticate_user_command
-        if options:
-            self.options = options
-        else:
+        if self.options is None:
             self.options = CommandOptions(
                 sleep_time=demand_env_var_as_float(name="ROWANTREE_SERVICE_SLEEP_TIME"),
                 retry_count=demand_env_var_as_int(name="ROWANTREE_SERVICE_RETRY_COUNT"),
