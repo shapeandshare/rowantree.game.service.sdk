@@ -21,7 +21,7 @@ class UserActiveSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, request: UserActiveGetStatus, user_guid: Optional[str] = None) -> UserActiveGetStatus:
+    def execute(self, request: UserActiveGetStatus, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 
@@ -45,5 +45,4 @@ class UserActiveSetCommand(AbstractCommand):
             data={"active": request.active},
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        response: dict = self.wrapped_request(request=request)
-        return UserActiveGetStatus.parse_obj(response)
+        self.wrapped_request(request=request)

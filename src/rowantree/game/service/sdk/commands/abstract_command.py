@@ -97,12 +97,12 @@ class AbstractCommand(BaseModel):
             "timeout": self.options.timeout,
         }
         if request.verb == RequestVerb.POST:
-            params["data"] = request.data
+            params["json"] = request.data
         if request.params is not None:
             params["params"] = request.params
         return params
 
-    def _api_caller(self, request: WrappedRequest, depth: int) -> dict:
+    def _api_caller(self, request: WrappedRequest, depth: int) -> Optional[dict]:
         """
         Wrapper for calls with `requests` to external APIs.
 
@@ -144,6 +144,8 @@ class AbstractCommand(BaseModel):
             return self._api_caller(request=request, depth=depth)
 
         if response.status_code in request.statuses.allow:
+            if response.content == b"":
+                return None
             return response.json()
 
         if response.status_code in request.statuses.retry:
@@ -158,7 +160,7 @@ class AbstractCommand(BaseModel):
             json.dumps({"status_code": response.status_code, "request": request.dict(), "depth": depth})
         )
 
-    def wrapped_request(self, request: WrappedRequest) -> dict:
+    def wrapped_request(self, request: WrappedRequest) -> Optional[dict]:
         """
         High level request method.  Entry point for consumption.
 
