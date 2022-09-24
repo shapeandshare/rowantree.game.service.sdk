@@ -22,6 +22,7 @@ from ..contracts.request_verb import RequestVerb
 
 # Acts as a singleton for auth across multiple commands.
 ROWANTREE_SERVICE_SDK_HEADERS: dict[str, str] = {}
+ROWANTREE_SERVICE_SDK_CLAIMS: dict[str, TokenClaims] = {}
 
 
 class AbstractCommand(BaseModel):
@@ -31,10 +32,6 @@ class AbstractCommand(BaseModel):
 
     authenticate_user_command: Optional[AuthenticateUserCommand] = None
     options: Optional[CommandOptions] = None
-
-    guid: Optional[str] = None
-    admin: Optional[bool] = None
-    disabled: Optional[bool] = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -76,10 +73,7 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
-        claims: TokenClaims = get_claims(auth_token.access_token, verify=False)
-        self.guid = claims.sub
-        self.admin = claims.admin
-        self.disabled = claims.disabled
+        ROWANTREE_SERVICE_SDK_CLAIMS["claims"] = get_claims(auth_token.access_token, verify=False)
         ROWANTREE_SERVICE_SDK_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
 
     def _build_requests_params(self, request: WrappedRequest) -> dict:
@@ -184,7 +178,7 @@ class AbstractCommand(BaseModel):
 
     def demand_user_guid(self, user_guid: Optional[str] = None) -> str:
         if user_guid is None:
-            user_guid = self.guid
+            user_guid = ROWANTREE_SERVICE_SDK_CLAIMS["claims"].sub
         if user_guid is None:
             raise RequestFailureError("Unable to determine command target")
         return user_guid

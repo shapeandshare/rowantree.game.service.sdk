@@ -4,10 +4,13 @@ from src.rowantree.game.service.sdk import RowanTreeService
 
 
 class TestService(unittest.TestCase):
-    def test_(self):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.client = RowanTreeService()
 
-        client = RowanTreeService()
-        client.user_active_get()
+    def test_(self):
+        self.client.user_create()
+        # self.client.user_active_get()
 
 
 if __name__ == "__main__":
