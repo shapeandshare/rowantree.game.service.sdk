@@ -22,7 +22,7 @@ class UserFeatureActiveGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> UserFeatureState:
+    def execute(self, user_guid: Optional[str] = None) -> UserFeatureState:
         """
         Executes the command.
 

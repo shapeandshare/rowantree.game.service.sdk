@@ -21,7 +21,7 @@ class MerchantTransformPerformCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, request: MerchantTransformRequest, user_guid: Optional[str]) -> None:
+    def execute(self, request: MerchantTransformRequest, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 

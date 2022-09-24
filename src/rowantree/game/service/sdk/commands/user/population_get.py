@@ -21,7 +21,7 @@ class UserPopulationGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> int:
+    def execute(self, user_guid: Optional[str] = None) -> int:
         """
         Executes the command.
 

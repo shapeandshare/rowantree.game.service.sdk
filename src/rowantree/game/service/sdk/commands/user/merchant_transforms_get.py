@@ -23,7 +23,7 @@ class UserMerchantTransformsGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> set[StoreType]:
+    def execute(self, user_guid: Optional[str] = None) -> set[StoreType]:
         """
         Executes the command.
 

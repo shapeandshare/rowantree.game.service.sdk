@@ -23,7 +23,7 @@ class UserStoresGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> dict[StoreType, UserStore]:
+    def execute(self, user_guid: Optional[str] = None) -> dict[StoreType, UserStore]:
         """
         Gets the (unique) list of user stores.
 

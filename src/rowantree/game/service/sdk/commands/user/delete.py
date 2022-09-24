@@ -20,7 +20,7 @@ class UserDeleteCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> None:
+    def execute(self, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 

@@ -23,7 +23,7 @@ class UserTransportCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, request: UserTransportRequest, user_guid: Optional[str]) -> UserFeatureState:
+    def execute(self, request: UserTransportRequest, user_guid: Optional[str] = None) -> UserFeatureState:
         """
         Executes the command.
 

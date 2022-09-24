@@ -21,7 +21,7 @@ class UserActiveSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, request: UserActiveGetStatus, user_guid: Optional[str]) -> UserActiveGetStatus:
+    def execute(self, request: UserActiveGetStatus, user_guid: Optional[str] = None) -> UserActiveGetStatus:
         """
         Executes the command.
 

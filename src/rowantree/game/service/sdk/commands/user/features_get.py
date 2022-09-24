@@ -23,7 +23,7 @@ class UserFeaturesGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> set[FeatureType]:
+    def execute(self, user_guid: Optional[str] = None) -> set[FeatureType]:
         """
         Executes the command.
 

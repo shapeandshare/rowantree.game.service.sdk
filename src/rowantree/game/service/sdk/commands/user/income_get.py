@@ -23,7 +23,7 @@ class UserIncomeGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> dict[IncomeSourceType, UserIncome]:
+    def execute(self, user_guid: Optional[str] = None) -> dict[IncomeSourceType, UserIncome]:
         """
         Executes the command.
 

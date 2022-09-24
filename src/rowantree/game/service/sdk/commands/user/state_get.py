@@ -22,7 +22,7 @@ class UserStateGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> UserState:
+    def execute(self, user_guid: Optional[str] = None) -> UserState:
         """
         Executes the command.
 

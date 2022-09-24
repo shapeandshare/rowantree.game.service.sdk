@@ -29,8 +29,8 @@ class AbstractCommand(BaseModel):
     Abstract Command
     """
 
-    authenticate_user_command: Optional[AuthenticateUserCommand]
-    options: Optional[CommandOptions]
+    authenticate_user_command: Optional[AuthenticateUserCommand] = None
+    options: Optional[CommandOptions] = None
 
     guid: Optional[str] = None
     admin: Optional[bool] = None
@@ -76,7 +76,7 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
-        claims: TokenClaims = get_claims(auth_token.access_token)
+        claims: TokenClaims = get_claims(auth_token.access_token, verify=False)
         self.guid = claims.sub
         self.admin = claims.admin
         self.disabled = claims.disabled
@@ -182,7 +182,7 @@ class AbstractCommand(BaseModel):
 
         return self._api_caller(request=request, depth=self.options.retry_count)
 
-    def demand_user_guid(self, user_guid: Optional[str]) -> str:
+    def demand_user_guid(self, user_guid: Optional[str] = None) -> str:
         if user_guid is None:
             user_guid = self.guid
         if user_guid is None:

@@ -22,7 +22,7 @@ class UserCreateCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: Optional[str]) -> User:
+    def execute(self, user_guid: Optional[str] = None) -> User:
         """
         Executes the command.
 
