@@ -6,7 +6,6 @@ from typing import Optional
 
 from rowantree.auth.sdk import AuthenticateUserCommand
 from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import ActionQueue, FeatureType, StoreType, User, UserFeatureState, UserState, UserStore
 
 from .commands.action_queue_process import ActionQueueProcessCommand
@@ -94,13 +93,13 @@ class RowanTreeService:
         self.action_queue_process_command = ActionQueueProcessCommand.parse_obj(command_dict)
         self.world_status_get_command = WorldStatusGetCommand.parse_obj(command_dict)
 
-    def user_active_get(self, user_guid: str) -> UserActiveGetStatus:
+    def user_active_get(self, user_guid: Optional[str] = None) -> UserActiveGetStatus:
         """
         Gets User Active State
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The user guid to look up.
 
         Returns
@@ -111,13 +110,13 @@ class RowanTreeService:
 
         return self.user_active_get_command.execute(user_guid=user_guid)
 
-    def user_active_set(self, user_guid: str, active: bool) -> UserActiveGetStatus:
+    def user_active_set(self, active: bool, user_guid: Optional[str] = None) -> UserActiveGetStatus:
         """
         Sets the user active state.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The user guid to target.
         active: bool
             The active state to set the user to.
@@ -131,13 +130,13 @@ class RowanTreeService:
         request: UserActiveGetStatus = UserActiveGetStatus(active=active)
         return self.user_active_set_command.execute(user_guid=user_guid, request=request)
 
-    def user_create(self, user_guid: str) -> User:
+    def user_create(self, user_guid: Optional[str] = None) -> User:
         """
         Creates a user.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -148,25 +147,25 @@ class RowanTreeService:
 
         return self.user_create_command.execute(user_guid=user_guid)
 
-    def user_delete(self, user_guid: str) -> None:
+    def user_delete(self, user_guid: Optional[str] = None) -> None:
         """
         Deletes a user.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
         """
 
         self.user_delete_command.execute(user_guid=user_guid)
 
-    def user_feature_active_get(self, user_guid: str) -> UserFeatureState:
+    def user_feature_active_get(self, user_guid: Optional[str] = None) -> UserFeatureState:
         """
         Gets the active user feature.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -177,13 +176,13 @@ class RowanTreeService:
 
         return self.user_feature_active_get_command.execute(user_guid=user_guid)
 
-    def user_features_get(self, user_guid: str) -> set[FeatureType]:
+    def user_features_get(self, user_guid: Optional[str] = None) -> set[FeatureType]:
         """
         Gets a (unique) list of user features.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -194,13 +193,13 @@ class RowanTreeService:
 
         return self.user_features_get_command.execute(user_guid=user_guid)
 
-    def user_income_get(self, user_guid: str) -> dict[StoreType, UserStore]:
+    def user_income_get(self, user_guid: Optional[str] = None) -> dict[StoreType, UserStore]:
         """
         Gets (unique) list of user incomes.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -210,13 +209,13 @@ class RowanTreeService:
 
         return self.user_income_get_command.execute(user_guid=user_guid)
 
-    def user_income_set(self, user_guid: str, income_source_name: StoreType, amount: int) -> None:
+    def user_income_set(self, income_source_name: StoreType, amount: int, user_guid: Optional[str] = None) -> None:
         """
         Sets a user income. (Creates or dismisses a number of workers of the type).
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
         income_source_name: StoreType
             The name of the income type.
@@ -227,13 +226,13 @@ class RowanTreeService:
         request: UserIncomeSetRequest = UserIncomeSetRequest(income_source_name=income_source_name, amount=amount)
         self.user_income_set_command.execute(user_guid=user_guid, request=request)
 
-    def user_merchant_transforms_get(self, user_guid: str) -> set[StoreType]:
+    def user_merchant_transforms_get(self, user_guid: Optional[str] = None) -> set[StoreType]:
         """
         Gets a (unique) set of user merchant transforms.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             Target user guid.
 
         Returns
@@ -244,13 +243,13 @@ class RowanTreeService:
 
         return self.user_merchant_transforms_get_command.execute(user_guid=user_guid)
 
-    def user_population_get(self, user_guid: str) -> int:
+    def user_population_get(self, user_guid: Optional[str] = None) -> int:
         """
         Gets the user population.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -261,13 +260,13 @@ class RowanTreeService:
 
         return self.user_population_get_command.execute(user_guid=user_guid)
 
-    def user_state_get(self, user_guid: str) -> UserState:
+    def user_state_get(self, user_guid: Optional[str] = None) -> UserState:
         """
         Gets the user game state.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -278,13 +277,13 @@ class RowanTreeService:
 
         return self.user_state_get_command.execute(user_guid=user_guid)
 
-    def user_stores_get(self, user_guid: str) -> dict[StoreType, UserStore]:
+    def user_stores_get(self, user_guid: Optional[str] = None) -> dict[StoreType, UserStore]:
         """
         Gets the (unique) set of user stores.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
 
         Returns
@@ -295,13 +294,13 @@ class RowanTreeService:
 
         return self.user_stores_get_command.execute(user_guid=user_guid)
 
-    def user_transport(self, user_guid: str, location: FeatureType) -> UserFeatureState:
+    def user_transport(self, location: FeatureType, user_guid: Optional[str] = None) -> UserFeatureState:
         """
         Performs a user transport. (feature to feature change)
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
         location: FeatureType
             The feature/location to transport the user to.
@@ -317,13 +316,13 @@ class RowanTreeService:
 
     # Merchant Commands
 
-    def merchant_transform_perform(self, user_guid: str, store_name: StoreType) -> None:
+    def merchant_transform_perform(self, store_name: StoreType, user_guid: Optional[str] = None) -> None:
         """
         Performs a merchant transform.
 
         Parameters
         ----------
-        user_guid: str
+        user_guid: Optional[str]
             The target user guid.
         store_name: StoreType
             The store name to perform the merchant transform on.

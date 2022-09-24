@@ -4,4 +4,4 @@ python-jose~=3.3
 starlette~=0.19
 rowantree.contracts~=0.16
 rowantree.common.sdk~=0.4
-rowantree.auth.sdk~=0.18
+rowantree.auth.sdk~=0.20

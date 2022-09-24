@@ -1,4 +1,5 @@
 """ User Features Get Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -22,7 +23,7 @@ class UserFeaturesGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> set[FeatureType]:
+    def execute(self, user_guid: Optional[str] = None) -> set[FeatureType]:
         """
         Executes the command.
 
@@ -37,9 +38,11 @@ class UserFeaturesGetCommand(AbstractCommand):
             A unique set of user features.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api/{self.options.tld}/game/v1/user/{user_guid}/features",
+            url=f"https://api/{self.options.tld}/game/v1/user/{target_guid}/features",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

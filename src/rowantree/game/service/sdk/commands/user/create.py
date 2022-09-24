@@ -1,4 +1,5 @@
 """ User Create Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -21,7 +22,7 @@ class UserCreateCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> User:
+    def execute(self, user_guid: Optional[str] = None) -> User:
         """
         Executes the command.
 
@@ -34,9 +35,12 @@ class UserCreateCommand(AbstractCommand):
         user: User
             The newly created user.
         """
+
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}",
             statuses=RequestStatusCodes(
                 allow=[status.HTTP_201_CREATED], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]
             ),

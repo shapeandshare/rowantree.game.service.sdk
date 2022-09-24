@@ -1,4 +1,5 @@
 """ UserActiveSet Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -20,7 +21,7 @@ class UserActiveSetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: UserActiveGetStatus) -> UserActiveGetStatus:
+    def execute(self, request: UserActiveGetStatus, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 
@@ -36,11 +37,12 @@ class UserActiveSetCommand(AbstractCommand):
             The state of the user.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/active",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/active",
             data={"active": request.active},
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
-        response: dict = self.wrapped_request(request=request)
-        return UserActiveGetStatus.parse_obj(response)
+        self.wrapped_request(request=request)

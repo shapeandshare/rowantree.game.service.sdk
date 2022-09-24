@@ -10,7 +10,7 @@ from requests import Response
 
 from rowantree.auth.sdk import AuthenticateUserCommand, AuthenticateUserRequest
 from rowantree.auth.sdk import CommandOptions as AuthCommandOptions
-from rowantree.auth.sdk import Token
+from rowantree.auth.sdk import Token, TokenClaims, get_claims
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import BaseModel
 
@@ -22,6 +22,7 @@ from ..contracts.request_verb import RequestVerb
 
 # Acts as a singleton for auth across multiple commands.
 ROWANTREE_SERVICE_SDK_HEADERS: dict[str, str] = {}
+ROWANTREE_SERVICE_SDK_CLAIMS: dict[str, TokenClaims] = {}
 
 
 class AbstractCommand(BaseModel):
@@ -29,8 +30,8 @@ class AbstractCommand(BaseModel):
     Abstract Command
     """
 
-    authenticate_user_command: Optional[AuthenticateUserCommand]
-    options: Optional[CommandOptions]
+    authenticate_user_command: Optional[AuthenticateUserCommand] = None
+    options: Optional[CommandOptions] = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -72,6 +73,7 @@ class AbstractCommand(BaseModel):
             username=demand_env_var(name="ACCESS_USERNAME"), password=demand_env_var(name="ACCESS_PASSWORD")
         )
         auth_token: Token = self.authenticate_user_command.execute(request=request)
+        ROWANTREE_SERVICE_SDK_CLAIMS["claims"] = get_claims(auth_token.access_token, verify=False)
         ROWANTREE_SERVICE_SDK_HEADERS["Authorization"] = f"Bearer {auth_token.access_token}"
 
     def _build_requests_params(self, request: WrappedRequest) -> dict:
@@ -95,12 +97,12 @@ class AbstractCommand(BaseModel):
             "timeout": self.options.timeout,
         }
         if request.verb == RequestVerb.POST:
-            params["data"] = request.data
+            params["json"] = request.data
         if request.params is not None:
             params["params"] = request.params
         return params
 
-    def _api_caller(self, request: WrappedRequest, depth: int) -> dict:
+    def _api_caller(self, request: WrappedRequest, depth: int) -> Optional[dict]:
         """
         Wrapper for calls with `requests` to external APIs.
 
@@ -142,6 +144,8 @@ class AbstractCommand(BaseModel):
             return self._api_caller(request=request, depth=depth)
 
         if response.status_code in request.statuses.allow:
+            if response.content == b"":
+                return None
             return response.json()
 
         if response.status_code in request.statuses.retry:
@@ -156,7 +160,7 @@ class AbstractCommand(BaseModel):
             json.dumps({"status_code": response.status_code, "request": request.dict(), "depth": depth})
         )
 
-    def wrapped_request(self, request: WrappedRequest) -> dict:
+    def wrapped_request(self, request: WrappedRequest) -> Optional[dict]:
         """
         High level request method.  Entry point for consumption.
 
@@ -173,3 +177,10 @@ class AbstractCommand(BaseModel):
         """
 
         return self._api_caller(request=request, depth=self.options.retry_count)
+
+    def demand_user_guid(self, user_guid: Optional[str] = None) -> str:
+        if user_guid is None:
+            user_guid = ROWANTREE_SERVICE_SDK_CLAIMS["claims"].sub
+        if user_guid is None:
+            raise RequestFailureError("Unable to determine command target")
+        return user_guid

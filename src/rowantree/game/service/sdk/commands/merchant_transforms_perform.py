@@ -1,4 +1,5 @@
 """ Merchant Transforms Perform Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -20,7 +21,7 @@ class MerchantTransformPerformCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str, request: MerchantTransformRequest) -> None:
+    def execute(self, request: MerchantTransformRequest, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 
@@ -31,9 +32,11 @@ class MerchantTransformPerformCommand(AbstractCommand):
             The merchant transform request.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/merchant",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/merchant",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.dict(by_alias=True),
         )

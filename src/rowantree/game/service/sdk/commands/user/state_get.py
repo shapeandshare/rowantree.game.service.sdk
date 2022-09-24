@@ -1,4 +1,5 @@
 """ User State Get Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -21,7 +22,7 @@ class UserStateGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> UserState:
+    def execute(self, user_guid: Optional[str] = None) -> UserState:
         """
         Executes the command.
 
@@ -36,9 +37,11 @@ class UserStateGetCommand(AbstractCommand):
             The user state object.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/state",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/state",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

@@ -1,4 +1,5 @@
 """ User Population Get Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -20,7 +21,7 @@ class UserPopulationGetCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> int:
+    def execute(self, user_guid: Optional[str] = None) -> int:
         """
         Executes the command.
 
@@ -35,9 +36,11 @@ class UserPopulationGetCommand(AbstractCommand):
             User population size.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.GET,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}/population",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}/population",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         response: dict = self.wrapped_request(request=request)

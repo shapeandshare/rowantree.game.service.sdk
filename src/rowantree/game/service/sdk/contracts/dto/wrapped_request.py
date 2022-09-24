@@ -29,5 +29,5 @@ class WrappedRequest(BaseModel):
     verb: RequestVerb
     statuses: RequestStatusCodes
     url: str
-    data: Optional[Any]  # str or dict ? - needs confirmation
+    data: Optional[dict]
     params: Optional[dict[str, str]]

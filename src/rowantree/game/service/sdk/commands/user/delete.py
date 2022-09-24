@@ -1,4 +1,5 @@
 """ User Delete Command Definition """
+from typing import Optional
 
 from starlette import status
 
@@ -19,7 +20,7 @@ class UserDeleteCommand(AbstractCommand):
         Executes the command.
     """
 
-    def execute(self, user_guid: str) -> None:
+    def execute(self, user_guid: Optional[str] = None) -> None:
         """
         Executes the command.
 
@@ -29,9 +30,11 @@ class UserDeleteCommand(AbstractCommand):
             The target user guid.
         """
 
+        target_guid: str = self.demand_user_guid(user_guid=user_guid)
+
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.DELETE,
-            url=f"https://api.{self.options.tld}/game/v1/user/{user_guid}",
+            url=f"https://api.{self.options.tld}/game/v1/user/{target_guid}",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
         )
         self.wrapped_request(request=request)
